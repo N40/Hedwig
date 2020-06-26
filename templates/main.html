@@ -290,7 +290,7 @@ html, body{
       <div class="w3-container">
         <h3 class="w3-text-blue">Willkommen</h3>
         <p>Das hier ist as Terminal zur Bearbeitung von Wahlprogramm, Ringezeit und Besuchertag. Noch im Bau. Fragen an:</p>
-        <a class="w3-text-green" href="mailto:nano@farbenmEEHr2020.de">
+        <a class="w3-text-green" style="cursor: pointer;" onclick="mail_to_nano()">
           <b>Nano</b> [@farbenmEEHr2020.de]
         </a>
         <div class="w3-padding-small"></div>
@@ -460,7 +460,9 @@ html, body{
 
 <script>
 
-
+function mail_to_nano(){
+  location.href = "mailto:nano"+"@"+"farbenmEEHr2020.de"
+}
 
 function update_page_visibilities(){
   if (!u_info){
