@@ -1,0 +1,96 @@
+
+.c-colldiv {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+.c-rrow{
+  overflow: hidden;
+  transition: height 0.2s ease-out;
+}
+.c-spacer{
+  height: max-content;
+}
+
+.c-rowid{
+  height: 0;
+  position: relative;
+  left: -14px;
+  top: -8px;
+  color: blue;
+}
+
+
+input {
+  width: 100%;
+  color: inherit;
+}
+
+input:read-only, textarea:read-only {
+  background: none;
+}
+input:-moz-read-only, textarea:-moz-read-only{
+  background: none;
+}
+textarea{
+  width: 100%;
+  color: inherit;
+  resize: none;
+  /*min-height: 40px;*/
+  /*height: 100%;*/
+}
+.ta160, .ta300{
+  /*height: 50px;*/
+  min-height: 50px;
+ }
+.ta50 {
+  /*height: 32px;*/
+  height: max-content;
+  min-height: 32px;
+  max-height: 50px;
+}
+.ta160 {
+  max-height: 115px;
+}
+.ta300 {
+  max-height: 225px;
+}
+
+#close_sidebar_click_area{
+  /*visibility: hidden;*/
+  display: none;
+  position: fixed;
+
+  margin-left: 280px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: grey;
+  opacity: 0.2;
+  animation-name: c_ani_left;
+  animation-duration: 0.4s;
+}
+@keyframes c_ani_left {
+  from {margin-left:   0px   ;opacity:0}
+  to   {margin-left: 280px   ;opacity:0.2}
+}
+
+.c-btn:hover{
+  background-color:#4CAF50!important;
+  color: white;
+}
+.c-btn{
+  cursor: pointer;
+  color: inherit;
+  text-align: center;
+  display: inline-flex;
+  padding: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.c-select{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}

@@ -1,0 +1,193 @@
+{
+    "1.f2.r7": {
+        "Titel": "Bogenschie\u00dfen",
+        "Kurztext": "So wie man es kennt",
+        "Langtext": "Das selbe, nur in L\u00e4ngerer Text f\u00fcr alternative Darstellung",
+        "Geld_Anfrage": 35,
+        "Zeiten": {
+            "bst_09_08": {
+                "checked": false,
+                "time_string": ""
+            },
+            "wpt_06_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": true,
+                    "slot_2": true,
+                    "slot_3": true,
+                    "slot_4": true,
+                    "slot_5": true,
+                    "slot_6": false
+                }
+            },
+            "wpt_10_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": false,
+                    "slot_2": false,
+                    "slot_3": false,
+                    "slot_4": false,
+                    "slot_5": false,
+                    "slot_6": false
+                }
+            },
+            "wpt_12_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": false,
+                    "slot_2": false,
+                    "slot_3": false,
+                    "slot_4": false,
+                    "slot_5": false,
+                    "slot_6": false
+                }
+            }
+        },
+        "meta": {
+            "changed_at": "Thu Apr 02 2020 16:11:11 GMT+0200 (Central European Summer Time)",
+            "changed_by_id": "19YOVN",
+            "changed_by_rdbl": "Beispiel-Stamm A | Espuertes"
+        },
+        "Geld_Limit": "10"
+    },
+    "1.00.f1": {
+        "Titel": "Neuer Titel",
+        "Kurztext": " ",
+        "Langtext": " ",
+        "Geld_Anfrage": null,
+        "Geld_Limit": null,
+        "Zeiten": " ",
+        "meta": {
+            "changed_at": "Mon Dec 23 2019 12:44:13 GMT+0100 (Central European Standard Time)",
+            "changed_by_id": "1Z4XI4",
+            "changed_by_rdbl": "UL-Leitung | Espuertes"
+        }
+    },
+    "1.f2.bj": {
+        "Titel": "Glasperlen",
+        "Kurztext": "Mit Gasbrenner und so...",
+        "Langtext": "",
+        "Geld_Anfrage": 100,
+        "Zeiten": {
+            "bst_09_08": {
+                "checked": false,
+                "time_string": ""
+            },
+            "wpt_06_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": true,
+                "slots": {
+                    "slot_1": true,
+                    "slot_2": true,
+                    "slot_3": false,
+                    "slot_4": true,
+                    "slot_5": true,
+                    "slot_6": true
+                }
+            },
+            "wpt_10_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": false,
+                    "slot_2": false,
+                    "slot_3": false,
+                    "slot_4": false,
+                    "slot_5": false,
+                    "slot_6": false
+                }
+            },
+            "wpt_12_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": false,
+                    "slot_2": false,
+                    "slot_3": false,
+                    "slot_4": false,
+                    "slot_5": false,
+                    "slot_6": false
+                }
+            }
+        },
+        "meta": {
+            "changed_at": "Wed Apr 01 2020 01:15:08 GMT+0200 (Central European Summer Time)",
+            "changed_by_id": "19YOVN",
+            "changed_by_rdbl": "Beispiel-Stamm A | Espuertes"
+        },
+        "Geld_Limit": 130
+    },
+    "1.00.3": {
+        "Titel": "Bogenschie\u00dfen",
+        "Kurztext": "Kurzen Beschreibung",
+        "Langtext": "L\u00e4ngere Beschreibung",
+        "Geld_Anfrage": null,
+        "Geld_Limit": null,
+        "Zeiten": {
+            "bst_09_08": {
+                "checked": false,
+                "time_string": ""
+            },
+            "wpt_06_08": {
+                "checked": true,
+                "is_combined_slots": true,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": true,
+                    "slot_2": true,
+                    "slot_3": false,
+                    "slot_4": true,
+                    "slot_5": true,
+                    "slot_6": true
+                }
+            },
+            "wpt_10_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": true,
+                    "slot_2": true,
+                    "slot_3": true,
+                    "slot_4": true,
+                    "slot_5": true,
+                    "slot_6": true
+                }
+            },
+            "wpt_12_08": {
+                "checked": true,
+                "is_combined_slots": false,
+                "is_walk_in": false,
+                "slots": {
+                    "slot_1": true,
+                    "slot_2": true,
+                    "slot_3": true,
+                    "slot_4": false,
+                    "slot_5": true,
+                    "slot_6": false
+                }
+            }
+        },
+        "meta": {
+            "changed_at": "Thu Apr 02 2020 16:21:52 GMT+0200 (Central European Summer Time)",
+            "changed_by_id": "1Z4XI4",
+            "changed_by_rdbl": "UL-Leitung | Espuertes"
+        }
+    },
+    "2.11.3": {
+        "Titel": "Dies d\u00fcrfte nicht zu sehen sein",
+        "Kurztext": "Kurzen Beschreibung",
+        "Langtext": "L\u00e4ngere Beschreibung",
+        "Geld_Anfrage": null,
+        "Geld_Limit": null
+    }
+}

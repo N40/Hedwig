@@ -1,0 +1,55 @@
+{
+    "0.00": {
+        "Name": "Nano",
+        "Verband": "",
+        "Keys": [
+            "17Tage"
+        ]
+    },
+    "1.00": {
+        "Name": "UL-Leitung",
+        "Verband": "",
+        "Keys": [
+            "123456",
+            "35MT7X"
+        ]
+    },
+    "1.f2": {
+        "Name": "Beispiel-Stamm A",
+        "Verband": "",
+        "Keys": [
+            "9ALVEX"
+        ]
+    },
+    "1.3t": {
+        "Name": "Beispiel-Stamm B",
+        "Verband": "",
+        "Keys": [
+            "QWERTZ",
+            "77QJ1X"
+        ]
+    },
+    "1.t6": {},
+    "1.41": {
+        "Name": "Nuew_neadfasd",
+        "Verband": "PSG",
+        "Keys": [
+            "CGW0MX"
+        ]
+    },
+    "1.qx": {
+        "Name": "Neuer Stamm",
+        "Verband": "BdP",
+        "Keys": [
+            "A7S53X",
+            "Z6QLIX"
+        ]
+    },
+    "2.li": {
+        "Name": "Some Stamm",
+        "Verband": "",
+        "Keys": [
+            "03GIDX"
+        ]
+    }
+}

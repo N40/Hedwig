@@ -1,0 +1,23 @@
+{
+    "0.00": {
+            "Name": "Nano",
+            "Verband": "",
+            "User": [
+                "17Tage"
+            ]
+    },
+    "1.00": {
+        "Name": "UL-Leitung",
+        "Verband": "",
+        "User": [
+            "1Z4XI4"
+        ]
+    },
+    "1.f2": {
+        "Name": "Beispiel-Stamm A",
+        "Verband": "",
+        "User": [
+            "19YOVN"
+        ],
+    }
+}
