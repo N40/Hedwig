@@ -94,3 +94,64 @@ textarea{
   padding-top: 4px;
   padding-bottom: 4px;
 }
+
+
+/* User Key List*/
+.c-urow .w3-col{
+  white-space: normal;
+}
+
+.c-klitem{
+  display: block ruby;
+  padding-bottom: 8px;
+}
+.c-keyfield{
+  font-family: "Courier New", Courier, monospace;
+  color: darkgreen;
+}
+.c-klitem .material-icons{
+  float: right;
+}
+
+.c-input{
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+
+/* Time Input*/
+.c-divider{
+  height: 25px;
+  width: 1px;
+  border-style: solid;
+  border-color: #c0c0c0;
+  border-width: 0px 1px 0px 0px;
+  margin-left: -1px;
+  float: left;
+}
+
+.c-ti-body{
+  padding-left: 22px;
+  margin-top: -3px;
+}
+
+.c-ti-day{
+  margin-bottom: 8px;
+}
+.c-ti-slots-selection .ccb-container{
+  width: inherit;
+  margin: auto;
+}
+.c-ti-slots-label .w3-col{
+  font-size: x-small;
+}
+/*.c-ti-slots .ccb-checkmark-hover{
+  width: 35px;
+}
+*/
+.c-ti-slots-options{
+  display: flex;
+}
+.c-ti-slots-options div{
+  padding: 0px 8px 0px 8px;
+}

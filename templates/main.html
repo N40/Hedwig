@@ -6,6 +6,8 @@
 <link rel="stylesheet" type= "text/css" href= "static/css/w3.css">
 <link rel="stylesheet" type= "text/css" href="static/css/google-icon.css">
 <link rel="stylesheet" type="text/css" href="static/css/c-style.css">
+<link rel="stylesheet" type="text/css" href="static/css/ccb.css">
+
 <link rel="shortcut icon" href="favicon.ico">
 <!-- <script type="text/javascript" src="static/js/p_data.json"></script> -->
 <script type="text/javascript" src="static/js/user.js"></script>
@@ -17,28 +19,6 @@
 html, body{
   height: 100%;
 }
-
-.c-urow .w3-col{
-  white-space: normal;
-}
-
-.c-klitem{
-  display: block ruby;
-  padding-bottom: 8px;
-}
-.c-keyfield{
-  font-family: "Courier New", Courier, monospace;
-  color: darkgreen;
-}
-.c-klitem .material-icons{
-  float: right;
-}
-
-.c-input{
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
 
 </style>
 
@@ -110,7 +90,9 @@ html, body{
     <div class="c-stable c-tier2 w3-col w3-hide" id="Zeiten">
       <div class="c-stablehead w3-hide s3">Zeiten</div>
       <div class="c-stablefield s9" >
-         <input class="w3-border-0 c-input" type="time" readonly>
+         <!-- <input class="w3-border-0 c-input" type="time" readonly> -->
+ 
+
       </div>
     </div>
     <div class="c-stable w3-col s3">
@@ -121,6 +103,79 @@ html, body{
     </div>
   </div>
 </div>
+
+</template>
+
+<template id="p_table_time_input_templates">
+
+<!-- <div class="c-ti-table"> -->
+  <div class="c-ti-day w3-row">
+    <div class="c-ti-head"
+     onclick="toggle_collapse(this.nextElementSibling, this.querySelector('input').checked)">
+      <label class="ccb-container" id="Tag_X">
+        <div class="ccb-label"></div>
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label>
+    </div>
+    
+  </div>
+<!-- </div> -->
+
+<div class="c-colldiv c-ti-body c-ti-slots">
+  <div class=" w3-border w3-padding-small">
+    <div class=" w3-row-padding c-ti-slots-label">
+      <div class="w3-col s2">09:30 - 10:10</div>
+      <div class="w3-col s2">10:25 - 11:05</div>
+      <div class="w3-col s2">11:20 - 12:00</div>
+      <div class="w3-col s2">14:00 - 14:40</div>
+      <div class="w3-col s2">14:55 - 15:35</div>
+      <div class="w3-col s2">15:50 - 16:30</div>
+    </div>
+    <div class="w3-row-padding c-ti-slots-selection">
+      <div class="w3-col s2"><label class="ccb-container" id="slot_1">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+      <div class="w3-col s2"><label class="ccb-container" id="slot_2">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+      <div class="w3-col s2"><label class="ccb-container" id="slot_3">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+      <div class="c-divider"></div>
+      <div class="w3-col s2"><label class="ccb-container" id="slot_4">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+      <div class="w3-col s2"><label class="ccb-container" id="slot_5">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+      <div class="w3-col s2"><label class="ccb-container" id="slot_6">
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div> 
+    </div>
+    <div class="w3-border-top" style="margin:4px;"></div>
+    <div class="c-ti-slots-options">
+      <div>
+      <label class="ccb-container" id="slot_combined"> Doppelstunde
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div>
+      <div>  
+      <label class="ccb-container" id="slot_walkin"> Walk-In
+        <input type="checkbox">
+        <span class="ccb-checkmark-hover w3-border"></span>
+      </label></div>  
+
+    </div>
+  </div>
+</div>
+
 </template>
 
 <template id="u_table_templates">
@@ -502,7 +557,7 @@ function init_page_master(){
   init_navigation();
   init_user_funcs();
 
-  open_subpage();
+  open_subpage.call(document.querySelector("#Home div"));
 
   update_page_visibilities();
   // w3_open_sidebar();

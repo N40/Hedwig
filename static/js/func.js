@@ -21,17 +21,23 @@ function open_subpage(){
 
   }
   catch {
+  	// true;
     bodydivs["Home"].style.display = "block";
   }
 
 };
 
-function toggle_collapse(coll_div, target=-1){
+function toggle_collapse(coll_div, target=-1, sudden_expand = false){
   if (target <0){
     target = coll_div.style.maxHeight;
   } else {
     target = !target;
   }
+
+  if (sudden_expand){
+    coll_div.style.maxHeight = "unset";
+  }
+
   if (target){
     coll_div.style.maxHeight = null;
   } else {
