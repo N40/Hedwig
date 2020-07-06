@@ -23,7 +23,7 @@ html, body{
 </style>
 
 <template id="p_table_templates">
-<div class="c-ptable" id="tmp_p_tablebody">
+<div class="c-ptable" id="tmp_pt_main">
   <div class="w3-row-padding w3-padding-small w3-border-bottom w3-text-blue">
     <div class="w3-col s3">
       <div class="">Titel </div>
@@ -35,10 +35,14 @@ html, body{
       <div class="">Ausrichter </div>
     </div>
   </div>
-  <!-- rows go here -->
 
-  <div class="w3-padding-small w3-border-top w3-hide" id="add_row_btn">
-  <div class="w3-button w3-hover-green" onclick="add_new_row(this.closest('.c-ptable'))">
+  <div  id="pt_body">
+    <!-- rows go here -->
+  </div>
+    
+
+  <div class="w3-padding-small w3-border-top w3-hide" id="btn_row_add_new">
+  <div class="w3-button w3-hover-green">
   <i class="material-icons context-icons">add</i> neuer Programmpunkt
   </div></div>
 
@@ -48,22 +52,28 @@ html, body{
   <div class="c-spacer w3-padding-small ">
     <div id="row_id" class=" w3-small c-rowid">????</div>
     <div class="w3-hide w3-padding-small c-tier2 w3-col">
-      <i class="material-icons context-icons w3-button w3-hover-green"
-        onclick="collapse_tablerow(this.closest('.c-rrow'))">close</i>
-      <i class="material-icons context-icons w3-button w3-hover-green"
-        onclick="make_writable(this.closest('.c-rrow'))">edit</i>
-      <i class="material-icons context-icons w3-button w3-hover-green"
-        onclick="undo_change(this.closest('.c-rrow'))">undo</i>
-      <i class="material-icons context-icons w3-button w3-hover-green"
-        onclick="save_row(this.closest('.c-rrow'))">done</i>
-      <i class="material-icons context-icons w3-button w3-hover-green"
-        onclick="remove_row(this.closest('.c-rrow'))">delete</i>
+      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_close" 
+        >close</i>
+        <!-- onclick="pt_row_view_collapse(this.closest('.c-rrow'))" -->
+      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_edit" 
+        >edit</i>
+        <!-- onclick="pt_row_make_writable(this.closest('.c-rrow'))" -->
+      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_undo" 
+        >undo</i>
+        <!-- onclick="pt_row_undo_changes(this.closest('.c-rrow'))" -->
+      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_done" 
+        >done</i>
+        <!-- onclick="pt_row_save_changes(this.closest('.c-rrow'))" -->
+      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_delete" 
+        >delete</i>
+        <!-- onclick="pt_row_remove(this.closest('.c-rrow'))" -->
     </div>
     <div class="c-stable w3-col s3" id="Titel">
       <div class="c-stablehead w3-hide s3">Titel</div> 
       <div class="c-stablefield s9" >
          <!-- <input class="w3-border c-input" type="text" readonly maxlength="50"> -->
         <textarea class="w3-border-0 c-input ta50" readonly maxlength="50" 
+          placeholder="Benennt euer Programm (50 Zeichen)" 
           oninput="adjust_textarea_height(this)" >#titel</textarea>  
       </div>
     </div>
@@ -71,6 +81,7 @@ html, body{
       <div class="c-stablehead w3-hide s3">Kurztext</div>
       <div class="c-stablefield s9" >
         <textarea class="w3-border-0 c-input ta160" readonly maxlength="160"
+          placeholder="Beschreibt was ihr tut (160 Zeichen)" 
           oninput="adjust_textarea_height(this)" >#kurztext</textarea>  
       </div>
     </div>
@@ -78,6 +89,7 @@ html, body{
       <div class="c-stablehead w3-hide s3">Langtext</div>
       <div class="c-stablefield s9" >
         <textarea class="w3-border-0 c-input ta300" readonly maxlength="300" 
+          placeholder="Beschreibt es nochmal (diesmal 300 Zeichen)" 
           oninput="adjust_textarea_height(this)" >#langtext</textarea>  
       </div>
     </div>
@@ -108,18 +120,20 @@ html, body{
 
 <template id="p_table_time_input_templates">
 
+
+
 <!-- <div class="c-ti-table"> -->
-  <div class="c-ti-day w3-row">
-    <div class="c-ti-head"
-     onclick="toggle_collapse(this.nextElementSibling, this.querySelector('input').checked)">
-      <label class="ccb-container" id="Tag_X">
-        <div class="ccb-label"></div>
-        <input type="checkbox">
-        <span class="ccb-checkmark-hover w3-border"></span>
-      </label>
-    </div>
-    
+<div class="c-ti-day w3-row">
+  <div class="c-ti-head"
+   onclick="c_colldiv_toggle(this.nextElementSibling, this.querySelector('input').checked)">
+    <label class="ccb-container" id="Tag_X">
+      <div class="ccb-label"></div>
+      <input type="checkbox">
+      <span class="ccb-checkmark-hover w3-border"></span>
+    </label>
   </div>
+  <!-- further divisions are to be placed here -->
+</div>
 <!-- </div> -->
 
 <div class="c-colldiv c-ti-body c-ti-slots">
@@ -174,6 +188,12 @@ html, body{
 
     </div>
   </div>
+</div>
+
+<div class="c-colldiv c-ti-body c-ti-text">
+  <!-- <div class=" w3-border w3-padding-small"> -->
+    <input type="text"  class=" w3-border w3-padding-small" id="ti_text" placeholder="z.B. 14:00 - 17:00">
+  <!-- </div> -->
 </div>
 
 </template>

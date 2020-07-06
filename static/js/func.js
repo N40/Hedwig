@@ -8,7 +8,7 @@ function open_subpage(){
   for (var i = menudivs.length - 1; i >= 0; i--) {
     menudivs[i].classList.replace("w3-border-green","w3-border-white");
     bodydivs[menudivs[i].id].style.display = "none";  
-    toggle_collapse(menudivs[i].getElementsByClassName("c-colldiv")[0],0);
+    c_colldiv_toggle(menudivs[i].getElementsByClassName("c-colldiv")[0],0);
   }
   for (var i = bodydivs.length - 1; i >= 0; i--) {
     bodydivs[i].style.display = "none";
@@ -17,7 +17,7 @@ function open_subpage(){
   try{
     this.parentElement.classList.replace("w3-border-white","w3-border-green");
     bodydivs[this.parentElement.id].style.display = "block";
-    toggle_collapse(this.parentElement.getElementsByClassName("c-colldiv")[0],1);
+    c_colldiv_toggle(this.parentElement.getElementsByClassName("c-colldiv")[0],1);
 
   }
   catch {
@@ -27,7 +27,7 @@ function open_subpage(){
 
 };
 
-function toggle_collapse(coll_div, target=-1, sudden_expand = false){
+function c_colldiv_toggle(coll_div, target=-1, sudden_expand = false){
   if (target <0){
     target = coll_div.style.maxHeight;
   } else {
