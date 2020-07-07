@@ -3,8 +3,8 @@
 <title>HEDWIG - FM2020 Programm-Info transfer Platform</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type= "text/css" href= "static/css/w3.css">
-<link rel="stylesheet" type= "text/css" href="static/css/google-icon.css">
+<link rel="stylesheet" type="text/css" href="static/css/w3.css">
+<link rel="stylesheet" type="text/css" href="static/css/google-icon.css">
 <link rel="stylesheet" type="text/css" href="static/css/c-style.css">
 <link rel="stylesheet" type="text/css" href="static/css/ccb.css">
 
@@ -14,6 +14,9 @@
 <script type="text/javascript" src="static/js/p_table.js"></script>
 <script type="text/javascript" src="static/js/comm.js"></script>
 <script type="text/javascript" src="static/js/func.js"></script>
+
+<link rel="stylesheet" type="text/css" href="static/css/pl_index_styles.css">
+<script type="text/javascript" src="static/js/pl_index_func.js"></script>
 
 <style>
 html, body{
@@ -417,13 +420,15 @@ html, body{
 
   </div>
 
-  <div class="c-bodydiv w3-animate-opacity w3-margin w3-border c-sl2" id="Listengenerator" >
-    <div class="w3-container">
+  <div class="c-bodydiv w3-animate-opacity c-sl2" id="Listengenerator" >
+    <div class="w3-container w3-margin w3-border">
       <h3 class="w3-text-blue">Listengenerator</h3>
-      <p>Lorem ipsum </p>
+      <a onclick="pl_print_frame()" class="w3-hover-blue w3-button">Drucken</a>
+      <a onclick="pl_add_page()"    class="w3-hover-blue w3-button">Füllen</a>
+      <a onclick="pl_init_frame()"  class="w3-hover-blue w3-button">iframe init</a>
+
     </div>
-
-
+    <div id="iframe_container" class="w3-margin"></div>
 
   </div>
 

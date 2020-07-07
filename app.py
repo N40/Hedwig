@@ -134,8 +134,10 @@ def push_user_dict():
 
     return "success"
 
-
-
+#____print_list_frame__#
+@app.route("/pl_frame")
+def pl_frame():
+    return render_template('pl_frame.html')
 
 
 

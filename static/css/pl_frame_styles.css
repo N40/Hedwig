@@ -1,0 +1,123 @@
+
+.pl_page {
+/*        width: 210mm;
+    min-height: 296mm;*/
+    width: 297mm;
+    min-height: 209mm;
+
+    padding: 10mm;
+    padding-top: 5mm;
+    margin-bottom: 10mm;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.pl_subpage {
+    padding: 0cm;
+    border: 1px blue dashed;
+    height: 189mm;
+    /*outline: 1cm rgba(200, 0 , 0 , 0.05) solid;*/
+}
+
+.pl_page_titel h1 {
+    text-align: center
+}
+
+.pl_page_metainfo{
+    padding: 0cm;
+    border: 1px green dashed;
+    height: 5mm;
+    font-size: 10px;
+    /*outline: 1cm #f2fff2 solid;*/
+}
+/*
+.print_table {
+    width: 100%;
+    font: 10pt "roboto";
+}
+
+.print_table tr {
+  display: flex;
+  border-top-width: 2px;
+  border-top-style: solid;
+  border-top-color: #dfdfdf;
+  border-collapse: collapse;
+  text-align: left;
+  padding: 2px;
+  min-height: 30px;
+}
+
+.print_table td, .print_table th {
+    padding-left: 10px;
+    padding-right: 10px ;
+}
+
+.print_table .header {
+  display: flex;
+  border-top-style: none;
+  font-size: 13pt;
+}
+
+*/
+
+
+
+.pl_row_id{
+    position:relative;
+    top:  30px;
+    left: -15px;
+    transform:rotate(-90deg);
+    font-size: 9px;
+    color: #0000A0;
+    height: 0px;
+    width: 0px;
+    font-family: monospace;
+}
+
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 7mm;
+    /*background-color: #FAFAFA;*/
+/*    font: 12pt "roboto";
+*/}
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+html {
+    overflow: auto;
+}
+
+@media print{size: landscape}
+
+@page {
+/*        size: A4;
+
+*/        margin: 0;
+}
+@media print {
+    html, body {
+/*            width: 210mm;
+        height: 296mm;     */   
+        height: 209mm;
+        width:  297mm;     
+        padding: 0mm;
+    }
+    .pl_page {
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+    }
+}
+
+
+
