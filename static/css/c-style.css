@@ -138,6 +138,17 @@ textarea{
 .c-ti-day{
   margin-bottom: 8px;
 }
+
+.c-ti-slots{
+  overflow-x: auto;
+}
+.c-ti-slots div{
+  min-width: min-content;
+}
+.c-ti-slots .w3-row-padding{
+  display: flex;
+}
+
 .c-ti-slots-selection .ccb-container{
   width: inherit;
   margin: auto;
@@ -151,6 +162,7 @@ textarea{
 */
 .c-ti-slots-options{
   display: flex;
+  flex-wrap: wrap;
 }
 .c-ti-slots-options div{
   padding: 0px 8px 0px 8px;
