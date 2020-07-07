@@ -28,8 +28,6 @@ function pt_all_tables_reset(){
     active_table = null;
   }
 
-  console.log(active_table, this);
-
   var ptables = document.getElementsByClassName("c-ptable");
   for (var i = 0; i < ptables.length; i++) {
     if(ptables[i] === active_table){
@@ -295,7 +293,9 @@ function pt_row_make_static(rowdiv) {
     time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background ="none";;
     checkboxes = time_input_subdivs[i].getElementsByTagName("input")
     for (var j = checkboxes.length - 1; j >= 0; j--) {
-      checkboxes[j].disabled = "disabled"
+      if (checkboxes[j].type == "checkbox"){
+        checkboxes[j].disabled = "disabled";
+      }
     }
   }
 
@@ -344,7 +344,17 @@ function pt_row_content_time_eval(ti_day_div){
   if (!ti_active){
     return null;
   }
-  
+
+  var ti_type = ti_day_div.id.split("_")[1];
+
+  if (ti_type=="WP"){
+    return pt_row_content_time_eva_slots(ti_day_div);
+  } else if (ti_type=="BT"||ti_type=="RZ"){
+    return pt_row_content_time_eva_text(ti_day_div);
+  }
+}
+
+function pt_row_content_time_eva_slots(ti_day_div){
   var slot_combined = ti_day_div.querySelector("#slot_combined input").checked;
   var slot_walkin   = ti_day_div.querySelector("#slot_walkin   input").checked;
   var ti_prefix = slot_walkin  ?"w":(slot_combined?"c":"s")
@@ -357,9 +367,22 @@ function pt_row_content_time_eval(ti_day_div){
     }
   }
 
-  var ti_encoded = ti_prefix+':' + slot_select.join(",") ;
+  var ti_encoded = ti_prefix+'%' + slot_select.join(",") ;
   return ti_encoded;
 }
+
+function pt_row_content_time_eva_text(ti_day_div){
+  var ti_prefix = "t";
+
+  var ti_text = ti_day_div.querySelector("#ti_text").value;
+  if (ti_text.length >= 4){
+    // TODO add more sophisticated logic here or replace it with start-end input
+    var ti_encoded = ti_prefix+'%' + ti_text ;
+    return ti_encoded;
+  }
+
+}
+
 
 function pt_row_content_time_fill(ti_day_div, ti_data_string = ""){
   if (!ti_data_string){
@@ -371,9 +394,18 @@ function pt_row_content_time_fill(ti_day_div, ti_data_string = ""){
   ti_day_div.querySelector("input").checked = true;
   c_colldiv_toggle(ti_day_div.querySelector(".c-colldiv"), true);
 
+  var ti_type = ti_day_div.id.split("_")[1];
+  if (ti_type=="WP"){
+    pt_row_content_time_fill_slots(ti_day_div, ti_data_string);
+  } else if (ti_type=="BT"||ti_type=="RZ"){
+    pt_row_content_time_fill_text(ti_day_div, ti_data_string);
+  }
 
-  var ti_prefix = ti_data_string.split(":")[0];
-  var ti_slots = ti_data_string.split(":")[1].split(",")
+}
+
+function pt_row_content_time_fill_slots(ti_day_div, ti_data_string){
+  var ti_prefix = ti_data_string.split("%")[0];
+  var ti_slots = ti_data_string.split("%")[1].split(",")
   ti_day_div.querySelector("#slot_combined input").checked = (ti_prefix=="c");
   ti_day_div.querySelector("#slot_walkin   input").checked = (ti_prefix=="w");
 
@@ -385,10 +417,13 @@ function pt_row_content_time_fill(ti_day_div, ti_data_string = ""){
     i = Number(ti_slots[j])
     ti_day_div.querySelector("#slot_"+i+" input").checked = true;
   }
-
 }
 
-// Button updateing
+function pt_row_content_time_fill_text(ti_day_div, ti_data_string){
+  ti_day_div.querySelector("#ti_text").value = ti_data_string.split("%")[1];
+}
+
+// BUTTON UPDATING
 function pt_row_btn_init(row){
   var btn_close   = row.querySelector("#btn_close");
   var btn_edit  = row.querySelector("#btn_edit");

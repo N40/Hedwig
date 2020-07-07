@@ -30,6 +30,8 @@ def extract_data(p_input, sub_rights, min_level = 0):
     for field in p_input:
         if field == 'meta':
             continue
+        elif (field[:2] == "Z_") and (sub_rights.get("Zeiten", -1) >= min_level):
+            p_out[field] = p_input[field]
         elif sub_rights.get(field, -1) >= min_level:
             p_out[field] = p_input[field]
     if len(p_out.keys()):

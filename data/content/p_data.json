@@ -2,32 +2,34 @@
     "1.f2.r7": {
         "Titel": "Titel_B",
         "Kurztext": "Kurzer text zur Beschreibung B",
-        "Langtext": "Lang, lang, lang, lang, lang, länger, text _B",
-        "Geld_Anfrage": 22,
-        "Z_WP_05_08": {},
-        "Z_WP_11_08": {},
-        "Z_RZ_06_08": {},
-        "Z_BT_08_08": {},
+        "Langtext": "Lang, lang, lang, lang, lang, l\u00e4nger, text _B",
+        "Geld_Anfrage": 22
     },
     "1.00.f1": {
         "Titel": "Titel_A",
         "Kurztext": "Kurzer text zur Beschreibung A",
-        "Langtext": "Lang, lang, lang, lang, lang, länger, text _A",
+        "Langtext": "Lang, lang, lang, lang, lang, l\u00e4nger, text _A",
         "Geld_Anfrage": null,
-        "Geld_Limit": null,
+        "Geld_Limit": null
     },
     "1.f2.bj": {
         "Titel": "Titel_C",
         "Kurztext": "Kurzer text zur Beschreibung C",
-        "Langtext": "Lang, lang, lang, lang, lang, länger, text _C",
-        "Geld_Anfrage": 33,
+        "Langtext": "Lang, lang, lang, lang, lang, l\u00e4nger, text _C",
+        "Geld_Anfrage": 33
     },
     "1.00.3": {
         "Titel": "Titel_D",
         "Kurztext": "Kurzer text zur Beschreibung D",
-        "Langtext": "Lang, lang, lang, lang, lang, länger, text _D",
+        "Langtext": "Lang, lang, lang, lang, lang, l\u00e4nger, text _D",
         "Geld_Anfrage": null,
         "Geld_Limit": null,
+        "meta": {},
+        "Z_RZ_10_08": "t%14:00 - 17:00",
+        "Z_RZ_06_08": null,
+        "Z_BT_08_08": null,
+        "Z_WP_11_08": "c%1,4,5",
+        "Z_WP_05_08": null
     },
     "2.11.3": {
         "Titel": "Titel_E",

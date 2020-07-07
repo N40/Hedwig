@@ -7,6 +7,8 @@ unterlager_dict = {
 
 Felder = [ 'Kurztext', 'Langtext', 'N_TN', 'Geld_Anfrage', 'Geld_Limit', 'Zeiten',]
 
+# TODO: add server-side date-check. In theory this is taken care of at client side.
+
 # -1 = hidden, 0 = readable, 1 = rightable
 # Level 0: User, Level 1: Target
 rights_dict = {
