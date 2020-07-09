@@ -3,9 +3,15 @@ import json
 import yaml
 
 import python.static_definitions as sd
-from python.io_tools import json_io_handler
 
-data_io_handler = json_io_handler("data/content/p_data.json")
+# from python.io_tools import json_io_handler
+
+# data_io_handler = json_io_handler("data/content/p_data.json")
+
+from python.sqlite_io_tools import Data_IO_Handler
+data_io_handler = Data_IO_Handler("data/p_data.db")
+# Checking if everything is fine
+# Data_IO_Handler("data/p_data.db", sd.SQL_COLUMNS_DATA)
 
 #___________________________________
 
@@ -35,18 +41,23 @@ def extract_data(p_input, sub_rights, min_level = 0):
         elif sub_rights.get(field, -1) >= min_level:
             p_out[field] = p_input[field]
     if len(p_out.keys()):
-        p_out["meta"] = p_input.get("meta",{})
+        p_out["meta"] = p_input.get("meta","")
 
     return p_out
 
 #___________________________________
 
 def load_data(u_info):
-    # p_data = yaml.safe_load(open("data/content/p_data.json", "r"))
-    p_data = data_io_handler.load()
 
     u_id = u_info["u_id"]
     rights = get_rights(u_id)
+
+    if u_id[0] == "0":
+        p_data = data_io_handler.load_data_all()
+    elif u_id[2:4] == "00":
+        p_data = data_io_handler.load_data_many_by_ul_id(u_id[0])
+    else:
+        p_data = data_io_handler.load_data_many_by_u_id(u_id)
 
     p_data_pull = {}
     for p_id in p_data:
@@ -74,12 +85,4 @@ def save_data(u_info, p_data_push):
 
         p_updates[p_id] = p_change
 
-    # p_data = yaml.safe_load(open("data/content/p_data.json", "r"))
-    # for p_id in p_updates:
-    #     if p_id not in p_data:
-    #         p_data[p_id] = {}
-    #     p_data[p_id].update(p_updates[p_id])
-
-    # open("data/content/p_data.json", "w").write(json.dumps(p_data, indent=4))
-
-    data_io_handler.save(p_updates)
+    data_io_handler.update_data(p_updates)

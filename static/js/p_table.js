@@ -204,7 +204,7 @@ function pt_row_content_fill(rowdiv, rowdata){
 
 function pt_row_add_new(tablediv){
   var new_row = pt_row_create_new();
-  p_id = u_info.u_id + '.xx';
+  p_id = pt_new_p_id()
   new_row.id = p_id;
   new_row.querySelector("#row_id").innerHTML = p_id;
   pt_row_content_fill(new_row, DEFAULT_ROW_DATA);
@@ -248,6 +248,9 @@ function pt_row_save_changes(rowdiv){
     local_data[p_id][field] = data_extract[field];
   }
   pt_row_make_static(rowdiv);
+
+  local_data[p_id]["meta"] =
+    'Modified at ['+get_date_formated()+'] by user-id ['+u_info.u_id+']';
 
   data_to_server[p_id] = local_data[p_id];
   update_changes_to_server();
@@ -571,4 +574,19 @@ function remove_breaks(rowdiv){
   value = rowdiv.querySelector("#Titel").getElementsByClassName("c-input")[0].value;
   value = value.replace("\n"," ");
   rowdiv.querySelector("#Titel").getElementsByClassName("c-input")[0].value = value;
+}
+
+// ---- MISC ----
+function get_date_formated(){
+  var date = new Date();
+  var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: "numeric"};
+  return new Intl.DateTimeFormat('de-DE', options).format(date);
+}
+
+function pt_new_p_id(){
+  var u_id = u_info.u_id;
+  var new_p_id = u_id+'.'+parseInt(36*(1+35*Math.random())).toString(36);
+  while(new_p_id in local_data)
+    new_p_id = u_id+'.'+parseInt(36*(1+35*Math.random())).toString(36);
+  return new_p_id  
 }

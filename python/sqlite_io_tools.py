@@ -17,7 +17,7 @@ def assert_u_id(x_id):
     if not bool(re.match(r'^\w.\w\w$', x_id)):
         raise TypeError(f'The given index "{x_id}" does not match the user-id format "L.UU"')
 
-def asser_ul_id(x_id):
+def assert_ul_id(x_id):
     if not bool(re.match(r'^\w$', x_id)):
         raise TypeError(f'The given index "{x_id}" does not match the UL-id format "L"')
 
@@ -43,15 +43,39 @@ def SQL_create_KeyGraveyard(path, name='_table', columns=["key","date_created"])
 
 
 # IO CLASSES
+class SQL_Cursor():
+    def __init__(self, db_location):
+        self._db_location = db_location
+        self._conn = sqlite3.connect(self._db_location)
+        self._c = self._conn.cursor()
+        print(f" > Opening connection to database '{self._db_location}'")
+
+
+    def __enter__(self):
+        return self._c
+
+    def __exit__(self, *_):
+        self._conn.commit()
+        self._conn.close()
+        print(f" > Closing connection to database '{self._db_location}'")
+
+        self.__del__()
+
+    def __del__(self):
+        pass
+
+
 class SQL_Handler():
     def __init__(self, db_location):
         self._db_location = db_location
-        self._conn = sqlite3.connect(db_location)
-        self._c    = self._conn.cursor()
+        # self._conn = sqlite3.connect(db_location)
+        # self._c    = self._conn.cursor()
+        # print(f" > Opening connection to database '{self._db_location}'")
 
-        self._c.execute('PRAGMA table_info(_table)')
-        self._columns = [x[1] for x in self._c.fetchall()] # get only col. names
-        self._idc = self._columns[0] # index-name
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('PRAGMA table_info(_table)')
+            self._columns = [x[1] for x in _cursor.fetchall()] # get only col. names
+            self._idc = self._columns[0] # index-name
 
     def _check_db_valid(self, target_columns):
         for col in target_columns:
@@ -63,8 +87,17 @@ class SQL_Handler():
         return True
 
     def __del__(self):
-        print(f" > Closing connection to database '{self._db_location}'")
-        self._conn.close()
+        # print(f" > Closing connection to database '{self._db_location}'")
+        # self._conn.close()
+        pass
+
+    # This needs to be redone.
+    # Goal is to have one class, one __init__ call and sub_connections on context-call
+    # def __enter__(self):
+    #     return self
+    # def __exit__(self, *_):
+    #     # Ignoring inputs, dumping to _
+    #     return
 
 class SQL_KeyGraveyard_Handler(SQL_Handler):
     """docstring for SQL_KeyGraveyard_Handler"""
@@ -80,9 +113,10 @@ class SQL_KeyGraveyard_Handler(SQL_Handler):
             print("TypeError:", e)
             return
         
-        self._c.execute('SELECT * FROM _table WHERE key=?', (x_key,) )
-        return(self._c.fetchone() is not None)
-
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE key=?', (x_key,) )
+            return (_cursor.fetchone() is not None)
+        
     def add_key(self, x_key):
         try:
             assert_key(x_key)
@@ -90,9 +124,10 @@ class SQL_KeyGraveyard_Handler(SQL_Handler):
             print("TypeError:", e)
             return
 
-        self._c.execute(f"INSERT INTO _table (key, date_created) VALUES (?,?)",
-            (x_key, time.strftime("%d.%m.%Y, %H:%M")) )
-        self._conn.commit()
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute(f"INSERT INTO _table (key, date_created) VALUES (?,?)",
+                (x_key, time.strftime("%d.%m.%Y, %H:%M")) )
+
 
 
 class SQL_JSON_IO_Handler(SQL_Handler):
@@ -100,13 +135,20 @@ class SQL_JSON_IO_Handler(SQL_Handler):
     def __init__(self, db_location):
         super().__init__(db_location)
 
+    def _check_for_id(self, load_data_by_x_id):
+        try:
+            self._idc_type_assert(x_id)
+        except TypeError as e:
+            print("TypeError: ", e)
+            return
+
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
+            return (_cursor.fetchone() is not None)
 
 
-    def _check_for_id(self, x_id):
-        self._c.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
-        return(self._c.fetchone() is not None)
 
-    def _add_id(self, x_id):
+    def _add_id(self, x_id, _cursor=None):
         try:
             self._idc_type_assert(x_id)
         except TypeError as e:
@@ -116,8 +158,11 @@ class SQL_JSON_IO_Handler(SQL_Handler):
         if self._check_for_id(x_id):
             return
 
-        self._c.execute(f"INSERT INTO _table ('{self._idc}') VALUES (?)", (x_id,))
-        self._conn.commit()
+        if _cursor is not None:
+            _cursor.execute(f"INSERT INTO _table ('{self._idc}') VALUES (?)", (x_id,))
+        else:
+            with SQL_Cursor(self._db_location) as _cursor:
+                _cursor.execute(f"INSERT INTO _table ('{self._idc}') VALUES (?)", (x_id,))
 
     def update_data(self, data_dict):
         try:
@@ -126,25 +171,27 @@ class SQL_JSON_IO_Handler(SQL_Handler):
             print("TypeError: input data is not a dict")
             return
 
-        for x_id in data_dict:
-            try:
-                self._idc_type_assert(x_id)
-            except TypeError as e:
-                print("TypeError: ", e)
-                return {}
+        with SQL_Cursor(self._db_location) as _cursor:
+            for x_id in data_dict:
+                try:
+                    self._idc_type_assert(x_id)
+                except TypeError as e:
+                    print("TypeError: ", e)
+                    return {}
 
-            if not self._check_for_id(x_id):
-                self._add_id(x_id)
+                if not self._check_for_id(x_id):
+                    self._add_id(x_id, _cursor)
 
-            keys = list(data_dict[x_id].keys())
-            vals = [data_dict[x_id][k] for k in keys]
+                keys = list(data_dict[x_id].keys())
+                vals = [data_dict[x_id][k] for k in keys]
 
-            command = f""" UPDATE _table
-            SET {'=? , '.join(keys)}=?
-            WHERE {self._idc}=?
-            """
-            self._c.execute(command, (*vals, x_id))
-        self._conn.commit()
+                command = f""" UPDATE _table
+                SET {'=? , '.join(keys)}=?
+                WHERE {self._idc}=?
+                """
+        
+                _cursor.execute(command, (*vals, x_id))
+
 
     def load_data_by_x_id(self, x_id):
         try:
@@ -158,8 +205,9 @@ class SQL_JSON_IO_Handler(SQL_Handler):
 
         row_dict = {}
         
-        self._c.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
-        db_row = self._c.fetchone()
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
+            db_row = _cursor.fetchone()
 
         for col, val in zip(self._columns[1:], db_row[1:]):
             if val is not None:
@@ -168,9 +216,9 @@ class SQL_JSON_IO_Handler(SQL_Handler):
         return row_dict
 
     def load_data_all(self):
-        self._c.execute('SELECT * FROM _table')
-
-        return self._sql_to_json(self._c.fetchall())
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table')
+            return self._sql_to_json(_cursor.fetchall())
 
     def _sql_to_json(self, sql_fetchall_response):
         assert type(sql_fetchall_response)==list
@@ -188,12 +236,13 @@ class SQL_JSON_IO_Handler(SQL_Handler):
 
 class Data_IO_Handler(SQL_JSON_IO_Handler):
     """docstring for DATA_IO_HANDLER"""
-    def __init__(self, args):
-        super().__init__(args)
+    def __init__(self, db_location, columns=None):
+        super().__init__(db_location)
         
         self._idc_type_assert = assert_p_id
 
-        self._check_db_valid(SQL_COLUMNS_DATA)
+        if columns is not None:
+            self._check_db_valid(columns)
 
 
     def load_data_many_by_u_id(self, u_id):
@@ -203,15 +252,20 @@ class Data_IO_Handler(SQL_JSON_IO_Handler):
             print("TypeError: ", e)
             return {}
 
-        self._c.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ u_id + '.%\'')
-
-        return self._sql_to_json(self._c.fetchall())
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ u_id + '.%\'')
+            return self._sql_to_json(_cursor.fetchall())
 
     def load_data_many_by_ul_id(self, ul_id):
-        asser_ul_id(ul_id)
-        self._c.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%.%\'')
+        try:
+            assert_ul_id(ul_id)
+        except TypeError as e:
+            print("TypeError: ", e)
+            return {}
 
-        return self._sql_to_json(self._c.fetchall())
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%.%\'')
+            return self._sql_to_json(_cursor.fetchall())
 
 class User_IO_Handler(object):
     """docstring for User_IO_Handler"""
@@ -222,15 +276,15 @@ class User_IO_Handler(object):
 
     def load_data_many_by_ul_id(self, ul_id):
         try:
-            asser_ul_id(ul_id)
+            assert_ul_id(ul_id)
         except TypeError as e:
             print("TypeError: ", e)
             return {}
 
-        self._c.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%\'')
-
-        return self._sql_to_json(self._c.fetchall())
-
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%\'')
+            return self._sql_to_json(_cursor.fetchall())
+        
 # USAGE
 # p_data_handler = Data_IO_Handler("p_data.db")
 # u_data_handler = User_IO_Handler("u_data.db")
