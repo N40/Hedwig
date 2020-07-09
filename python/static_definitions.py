@@ -1,3 +1,18 @@
+MASTERKEY = "57d8a58c5f974be54b90f05d201946df"
+
+SQL_COLUMNS_DATA = [
+    "p_id",
+    "meta",
+    "Titel",
+    "Kurztext",
+    "Langtext",
+    "N_TN",
+    "Z_RZ_10_08",
+    "Z_RZ_06_08",
+    "Z_BT_08_08",
+    "Z_WP_11_08",
+    "Z_WP_05_08",
+]
 
 unterlager_dict = {
     0: "Admin",
