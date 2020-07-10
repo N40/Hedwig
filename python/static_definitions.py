@@ -7,11 +7,20 @@ SQL_COLUMNS_DATA = [
     "Kurztext",
     "Langtext",
     "N_TN",
+    #
+    "Z_RZ_03_08",
+    "Z_RZ_04_08",
+    "Z_RZ_05_08",
+    "Z_RZ_09_08",
     "Z_RZ_10_08",
-    "Z_RZ_06_08",
+    #
     "Z_BT_08_08",
-    "Z_WP_11_08",
+    #
+    "Z_WP_03_08",
+    "Z_WP_04_08",
     "Z_WP_05_08",
+    "Z_WP_09_08",
+    "Z_WP_10_08",
 ]
 
 SQL_COLUMNS_USER = [
@@ -19,8 +28,26 @@ SQL_COLUMNS_USER = [
     "Name",
     "Verband",
     "Keys",
-    "meta"
+    "meta",
 ]
+
+# -1 = everyone, [1,2,3] = ul #1,#2 and #3
+ti_days = {
+    # Ringezeit
+    "Z_RZ_03_08": -1,
+    "Z_RZ_04_08": -1,
+    "Z_RZ_05_08": -1,
+    "Z_RZ_09_08": -1,
+    "Z_RZ_10_08": -1,
+    # Besuchertag
+    "Z_BT_08_08": -1,
+    # Wahlprogramm
+    "Z_WP_03_08": -1,
+    "Z_WP_04_08": -1,
+    "Z_WP_05_08": -1,
+    "Z_WP_09_08": -1,
+    "Z_WP_10_08": -1
+}
 
 unterlager_dict = {
     0: "Admin",
