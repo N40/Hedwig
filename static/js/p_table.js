@@ -84,11 +84,36 @@ var PT_DATA_BIND = {
   "Wahlprogramm":  ()=>extract_data("GL"),
 }
 
-var TI_DATES = {
+var TI_DATES_ACCESS = {
+    // Wahlprogramm
+    "Z_WP_03_08": -1,
+    "Z_WP_04_08": -1,
+    "Z_WP_05_08": -1,
+    "Z_WP_09_08": -1,
+    "Z_WP_10_08": -1,
+    // Besuchertag
+    "Z_BT_08_08": -1,
+    // Ringezeit
+    "Z_RZ_03_08": -1,
+    "Z_RZ_04_08": -1,
+    "Z_RZ_05_08": -1,
+    "Z_RZ_09_08": -1,
+    "Z_RZ_10_08": -1,
+}
+
+var TI_DATES_FORM = {
+  "Z_WP_03_08": "Wahlprogramm, 03.08",
+  "Z_WP_04_08": "Wahlprogramm, 04.08",
   "Z_WP_05_08": "Wahlprogramm, 05.08",
-  "Z_WP_11_08": "Wahlprogramm, 11.08",
+  "Z_WP_09_08": "Wahlprogramm, 09.08",
+  "Z_WP_10_08": "Wahlprogramm, 10.08",
+  // 
   "Z_BT_08_08": "Besuchertag, 08.08",
-  "Z_RZ_06_08": "Ringezeit, 06.08",
+  // 
+  "Z_RZ_03_08": "Ringezeit, 03.08",
+  "Z_RZ_04_08": "Ringezeit, 04.08",
+  "Z_RZ_05_08": "Ringezeit, 05.08",
+  "Z_RZ_09_08": "Ringezeit, 09.08",
   "Z_RZ_10_08": "Ringezeit, 10.08"
 }
 
@@ -135,7 +160,10 @@ function pt_row_create_new(){
   var ti_slots_temp = ti_templates_DOM.querySelector(".c-ti-slots")
   var ti_text_temp  = ti_templates_DOM.querySelector(".c-ti-text")
 
-  for (var ti_date in TI_DATES) {
+  for (var ti_date in TI_DATES_ACCESS) {
+    if (!(TI_DATES_ACCESS[ti_date] == -1 || TI_DATES_ACCESS[ti_date].includes(parseInt(u_info.u_id[0])))){
+      continue
+    }
 
     new_ti = document.importNode(ti_temp, true)
     new_row.querySelector("#Zeiten .c-stablefield").appendChild(new_ti)
@@ -163,7 +191,7 @@ function pt_row_create_new(){
     }
 
     new_ti.id = ti_date
-    new_ti.querySelector(".c-ti-head .ccb-label").innerHTML = TI_DATES[ti_date]
+    new_ti.querySelector(".c-ti-head .ccb-label").innerHTML = TI_DATES_FORM[ti_date]
 
     ti_checkboxes = new_ti.querySelectorAll("input")
     for (var j = ti_checkboxes.length - 1; j >= 0; j--) {
@@ -194,7 +222,13 @@ function pt_row_content_fill(rowdiv, rowdata){
   //   adjust_textarea_height(textareas[i]);
   // }
 
-  for (ti_date in TI_DATES){
+  var p_id = rowdiv.id;
+
+  for (ti_date in TI_DATES_ACCESS){
+    if (!(TI_DATES_ACCESS[ti_date] == -1 || p_id in TI_DATES_ACCESS[ti_date])){
+      continue
+    }
+
     pt_row_content_time_fill(rowdiv.querySelector("#"+ti_date), rowdata[ti_date])
   }
 
