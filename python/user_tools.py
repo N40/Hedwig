@@ -26,6 +26,14 @@ def load_user_information(key):
             u_info["Verband"] = user_dict[u_id]["Verband"]
             u_info["Unterlager"] = sd.unterlager_dict[int(u_id[0])]
             return u_info
+
+    # backdoor (in case of non-functional or empty user-database)
+    if (key == sd.MASTERKEY):
+        return {
+            "u_id": "0.__",
+            "Name": "AdminBackdoor",
+            "Unterlager": sd.unterlager_dict[0],
+        }
     
     return None
 
