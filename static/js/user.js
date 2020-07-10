@@ -224,3 +224,26 @@ function ukc_add_new_key(u_id, Name=""){
     init_ukc_form();
   })
 }
+
+
+// MISC STUFF
+function key_string_to_list(key_string){
+  if (!key_string){ return null};
+
+  var sub_parts = key_string.split(":");
+  var key_list = [];
+  for (var i = 0; i < sub_parts.length; i++) {
+    if(sub_parts[i].length>0){
+      key_list.push(sub_parts[i]);
+    }
+  }
+  return key_list;
+}
+
+function key_list_to_string(key_list){
+  if (key_list.length==0){
+    return null;
+  }
+  return ":"+key_list.join(":")+":";
+
+}

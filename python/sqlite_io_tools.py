@@ -6,21 +6,30 @@ from python.static_definitions import SQL_COLUMNS_DATA
 
 # TYPE ASSERTIONS FOR ERROR CHECKING
 def assert_key(x_key):
+    assert_string(x_key)
     if not bool(re.match(r"^[A-Z \d\W]{6}$",x_key)):
         raise TypeError(f'The given key does not match the format "KKKKKK"')
 
 def assert_p_id(x_id):
+    assert_string(x_id)
     if not bool(re.match(r'^\w.\w\w.\w\w$', x_id)):
         raise TypeError(f'The given index "{x_id}" does not match the programm-id format "L.UU.PP"')
+        return False
+    return True
 
 def assert_u_id(x_id):
+    assert_string(x_id)
     if not bool(re.match(r'^\w.\w\w$', x_id)):
         raise TypeError(f'The given index "{x_id}" does not match the user-id format "L.UU"')
 
 def assert_ul_id(x_id):
+    assert_string(x_id)
     if not bool(re.match(r'^\w$', x_id)):
         raise TypeError(f'The given index "{x_id}" does not match the UL-id format "L"')
 
+def assert_string(string):
+    if type(string) is not str:
+        raise TypeError(f'The given input "{string}" is not of string format')
 
 # INIT HELPER FUNCTIONS (ONLY ONCE NEEDED)
 def SQL_create_JSON_DB(path, name='_table', columns=SQL_COLUMNS_DATA):
@@ -44,11 +53,15 @@ def SQL_create_KeyGraveyard(path, name='_table', columns=["key","date_created"])
 
 # IO CLASSES
 class SQL_Cursor():
-    def __init__(self, db_location):
+    def __init__(self, db_location, verbos=True):
         self._db_location = db_location
+        self.verbos = verbos
+
         self._conn = sqlite3.connect(self._db_location)
         self._c = self._conn.cursor()
-        print(f" > Opening connection to database '{self._db_location}'")
+
+        if self.verbos:
+            print(f" > Opening connection to database '{self._db_location}'")
 
 
     def __enter__(self):
@@ -57,7 +70,9 @@ class SQL_Cursor():
     def __exit__(self, *_):
         self._conn.commit()
         self._conn.close()
-        print(f" > Closing connection to database '{self._db_location}'")
+
+        if self.verbos:
+            print(f" > Closing connection to database '{self._db_location}'")
 
         self.__del__()
 
@@ -135,16 +150,20 @@ class SQL_JSON_IO_Handler(SQL_Handler):
     def __init__(self, db_location):
         super().__init__(db_location)
 
-    def _check_for_id(self, load_data_by_x_id):
+    def _check_for_id(self, x_id, _cursor=None):
         try:
             self._idc_type_assert(x_id)
         except TypeError as e:
             print("TypeError: ", e)
             return
 
-        with SQL_Cursor(self._db_location) as _cursor:
+        if _cursor is not None:
             _cursor.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
             return (_cursor.fetchone() is not None)
+        else:
+            with SQL_Cursor(self._db_location) as _cursor:
+                _cursor.execute('SELECT * FROM _table WHERE '+self._idc+'=?', (x_id,) )
+                return (_cursor.fetchone() is not None)
 
 
 
@@ -179,7 +198,7 @@ class SQL_JSON_IO_Handler(SQL_Handler):
                     print("TypeError: ", e)
                     return {}
 
-                if not self._check_for_id(x_id):
+                if not self._check_for_id(x_id, _cursor):
                     self._add_id(x_id, _cursor)
 
                 keys = list(data_dict[x_id].keys())
@@ -221,15 +240,32 @@ class SQL_JSON_IO_Handler(SQL_Handler):
             return self._sql_to_json(_cursor.fetchall())
 
     def _sql_to_json(self, sql_fetchall_response):
-        assert type(sql_fetchall_response)==list
-        data_dict = {}
-        for p_id, *vals in sql_fetchall_response:
-            assert (p_id is not None)
+        if type(sql_fetchall_response)==tuple:
+            sql_fetchall_response = [sql_fetchall_response]
+        elif sql_fetchall_response is None:
+            return {}
 
-            data_dict[p_id] = {}
+        try:
+            assert type(sql_fetchall_response)==list
+        except AssertionError as e:
+            print("TypeError: ",e)
+            return {}
+
+        if len(sql_fetchall_response)==0:
+            return {}
+
+        data_dict = {}
+        for x_id, *vals in sql_fetchall_response:
+            try:
+                assert (x_id is not None)
+            except AssertionError:
+                print(f"TypeError: id '{x_id} is None'")
+                continue
+
+            data_dict[x_id] = {}
             for col, val in zip(self._columns[1:], vals):
                 if val is not None:
-                    data_dict[p_id][col] = val
+                    data_dict[x_id][col] = val
 
         return data_dict
 
@@ -267,10 +303,10 @@ class Data_IO_Handler(SQL_JSON_IO_Handler):
             _cursor.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%.%\'')
             return self._sql_to_json(_cursor.fetchall())
 
-class User_IO_Handler(object):
+class User_IO_Handler(SQL_JSON_IO_Handler):
     """docstring for User_IO_Handler"""
-    def __init__(self, args):
-        super().__init__(args)
+    def __init__(self, db_location):
+        super().__init__(db_location)
         
         self._idc_type_assert = assert_u_id
 
@@ -284,6 +320,27 @@ class User_IO_Handler(object):
         with SQL_Cursor(self._db_location) as _cursor:
             _cursor.execute('SELECT * FROM _table WHERE '+self._idc+' LIKE \''+ ul_id + '.%\'')
             return self._sql_to_json(_cursor.fetchall())
+
+    def fetch_u_info_by_key(self, x_key, nokey=True):
+        try:
+            assert_key(x_key)
+        except TypeError as e:
+            print("TypeError: ", e)
+            return
+
+        with SQL_Cursor(self._db_location) as _cursor:
+            _cursor.execute('SELECT * FROM _table WHERE Keys LIKE\'%:'+x_key+ ':%\'')
+            query = self._sql_to_json(_cursor.fetchone())
+
+        if query == {}:
+            return None
+
+        u_id, u_info = query.popitem()
+        if nokey:
+            u_info.pop("Keys")
+        u_info["u_id"] = u_id
+        return u_info
+
         
 # USAGE
 # p_data_handler = Data_IO_Handler("p_data.db")

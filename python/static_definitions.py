@@ -14,6 +14,14 @@ SQL_COLUMNS_DATA = [
     "Z_WP_05_08",
 ]
 
+SQL_COLUMNS_USER = [
+    "u_id",
+    "Name",
+    "Verband",
+    "Keys",
+    "meta"
+]
+
 unterlager_dict = {
     0: "Admin",
     1: "Espuertes",

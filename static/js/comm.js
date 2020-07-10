@@ -36,6 +36,11 @@ function pull_user_dict(callback = function(response){return;}){
   url = "/user/pull_user_dict?key="+u_info.key
   ajax_get(url, function(response){
     local_user_dict = JSON.parse(response);
+
+    for (u_id in local_user_dict) {
+      local_user_dict[u_id].Keys = key_string_to_list(local_user_dict[u_id].Keys);
+    }
+
     // console.log("fetched udict");
     init_ukc_table();
     init_ukc_form();
@@ -77,8 +82,14 @@ function push_user_dict(callback = function(response){return;}){
       return;
   };
 
+  var user_dict_to_server_temp = user_dict_to_server;
+
+  for (u_id in user_dict_to_server) {
+    user_dict_to_server_temp[u_id].Keys = key_list_to_string(user_dict_to_server_temp[u_id].Keys);
+  }
+
   url = "/user/push_user_dict?key="+u_info.key
-  ajax_send(url, JSON.stringify(user_dict_to_server), function(response){
+  ajax_send(url, JSON.stringify(user_dict_to_server_temp), function(response){
       user_dict_to_server = {};
       callback();
   });
