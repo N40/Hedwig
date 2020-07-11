@@ -3,15 +3,21 @@ import json
 import yaml
 
 import python.static_definitions as sd
+import python.type_tools as tt
 
 # from python.io_tools import json_io_handler
 
 # data_io_handler = json_io_handler("data/content/p_data.json")
 
 from python.sqlite_io_tools import Data_IO_Handler
-data_io_handler = Data_IO_Handler("data/p_data.db")
+data_io_handler = None
+def init_data_tools():
+    global data_io_handler
+    data_io_handler = Data_IO_Handler(sd.data_db_location)
 # Checking if everything is fine
 # Data_IO_Handler("data/p_data.db", sd.SQL_COLUMNS_DATA)
+
+init_data_tools()
 
 #___________________________________
 
@@ -48,8 +54,12 @@ def extract_data(p_input, sub_rights, min_level = 0):
 #___________________________________
 
 def load_data(u_info):
+    try:
+        u_id = u_info["u_id"]
+        tt.assert_u_id(u_id)
+    except:
+        return None
 
-    u_id = u_info["u_id"]
     rights = get_rights(u_id)
 
     if u_id[0] == "0":

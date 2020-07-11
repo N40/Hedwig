@@ -11,8 +11,15 @@ import python.static_definitions as sd
 # uklu_io_handler = io_handler("data/users/user_key_list_used")
 
 from python.sqlite_io_tools import User_IO_Handler, SQL_KeyGraveyard_Handler
-user_io_handler = User_IO_Handler("data/user_data.db")
-key_graveyard  = SQL_KeyGraveyard_Handler("data/key_graveyard.db")
+user_io_handler = None
+key_graveyard = None
+def init_user_tools():
+    global user_io_handler
+    global key_graveyard
+    user_io_handler = User_IO_Handler(sd.user_db_location)
+    key_graveyard  = SQL_KeyGraveyard_Handler(sd.key_graveyard_db_location)
+
+init_user_tools()
 
 #______________________________
 
@@ -130,6 +137,9 @@ def load_user_dict(u_info):
         p_data = user_io_handler.load_data_many_by_ul_id(u_id[0])
     else:
         p_data = {}
+
+    for u_id in p_data:
+        p_data[u_id]["Unterlager"] = sd.unterlager_dict[int(u_id[0])]
 
     return p_data
 

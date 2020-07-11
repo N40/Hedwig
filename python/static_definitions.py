@@ -31,6 +31,11 @@ SQL_COLUMNS_USER = [
     "meta",
 ]
 
+data_db_location = "data/p_data.db"
+user_db_location = "data/user_data.db"
+key_graveyard_db_location = "data/key_graveyard.db"
+
+
 # -1 = everyone, [1,2,3] = ul #1,#2 and #3
 ti_days = {
     # Ringezeit
