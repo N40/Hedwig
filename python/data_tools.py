@@ -4,20 +4,19 @@ import yaml
 
 import python.static_definitions as sd
 import python.type_tools as tt
+import python.user_tools as ut
 
 # from python.io_tools import json_io_handler
 
 # data_io_handler = json_io_handler("data/content/p_data.json")
 
 from python.sqlite_io_tools import Data_IO_Handler
-data_io_handler = None
 def init_data_tools():
     global data_io_handler
     data_io_handler = Data_IO_Handler(sd.data_db_location)
 # Checking if everything is fine
 # Data_IO_Handler("data/p_data.db", sd.SQL_COLUMNS_DATA)
 
-init_data_tools()
 
 #___________________________________
 
@@ -76,6 +75,12 @@ def load_data(u_info):
             continue
 
         p_data_pull[p_id] = extract_data(p_data[p_id], sub_rights)
+
+        if len(p_data_pull[p_id].keys()):
+            try:
+                p_data_pull[p_id]['Ausrichter'] = ut.user_io_handler.load_data_by_x_id(p_id[:4])['Name'];
+            except:
+                p_data_pull[p_id]['Ausrichter'] = '* unknown/deleted user *';
 
     return p_data_pull
 

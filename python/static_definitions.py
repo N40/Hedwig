@@ -76,7 +76,8 @@ rights_dict = {
             'N_TN'          : 1 , 
             'Geld_Anfrage'  : 1 , 
             'Geld_Limit'    : 0 ,
-            'Zeiten'        : 1 , 
+            'Zeiten'        : 1 ,
+            'Ausrichter'    : 1 ,
         },
         "UL": {
             # Stamm ließt die inahltlichen Infos des eigenen ULs
@@ -85,6 +86,7 @@ rights_dict = {
             'Langtext'      : 0 , 
             'N_TN'          : 0 , 
             'Zeiten'        : 0 , 
+            'Ausrichter'    : 0 ,
         },
         "GL": {
         }
@@ -97,7 +99,8 @@ rights_dict = {
             'N_TN'          : 1 , 
             'Geld_Anfrage'  : 1 , 
             'Geld_Limit'    : 1 ,
-            'Zeiten'        : 1 , 
+            'Zeiten'        : 1 ,
+            'Ausrichter'    : 1 ,
         },
         "UL": {
             'Titel'         : 0 ,
@@ -106,14 +109,16 @@ rights_dict = {
             'N_TN'          : 0 , 
             'Geld_Anfrage'  : 0 , 
             'Geld_Limit'    : 1 ,
-            'Zeiten'        : 0 , 
+            'Zeiten'        : 0 ,
+            'Ausrichter'    : 0 ,
         },
         "GL": {
             'Titel'         : 0 ,
             'Kurztext'      : 0 , 
             'Langtext'      : 0 , 
             'N_TN'          : 0 , 
-            'Zeiten'        : 0 ,  
+            'Zeiten'        : 0 ,
+            'Ausrichter'    : 0 ,
         }
     },
     "Admin":{
@@ -124,7 +129,8 @@ rights_dict = {
             'N_TN'          : 0 , 
             'Geld_Anfrage'  : 0 , 
             'Geld_Limit'    : 0 ,
-            'Zeiten'        : 0 , 
+            'Zeiten'        : 0 ,
+            'Ausrichter'    : 0 ,
         },
         "UL": {
             'Titel'         : 0 ,
@@ -134,6 +140,7 @@ rights_dict = {
             'Geld_Anfrage'  : 0 , 
             'Geld_Limit'    : 0 ,
             'Zeiten'        : 0 , 
+            'Ausrichter'    : 0 ,
         },
         "GL": {
             'Titel'         : 0 ,
@@ -142,7 +149,8 @@ rights_dict = {
             'N_TN'          : 0 , 
             'Geld_Anfrage'  : 0 , 
             'Geld_Limit'    : 0 ,
-            'Zeiten'        : 0 , 
+            'Zeiten'        : 0 ,
+            'Ausrichter'    : 0 , 
         }
 
     }

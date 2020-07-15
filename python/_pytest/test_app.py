@@ -120,7 +120,7 @@ def test_load_user_dict():
     assert ut.load_user_dict({'u_id':'2.00', }) == {
     '2.00': {'Keys': ':4R5T5T:',
             'Name': 'ul2_Leitung',
-            'Unterlager': 'Prismanien',
+            'Unterlager': 'Wasteland',
             'Verband': 'V3',
             'meta': 'meta_2.00'},
     }
@@ -178,24 +178,29 @@ def test_load_data():
     '1.23.t2': {'Kurztext': 'KT_t2',
                 'Langtext': 'LT_t2',
                 'Titel': 'Titel_t2',
+                'Ausrichter': 'ul1_BspStamm',
                 'meta': 'meta_1.23.t2'},
     '1.23.z3': {'Kurztext': 'KT_z3',
                 'Langtext': 'LT_z3',
                 'Titel': 'Titel_z3',
+                'Ausrichter': 'ul1_BspStamm',
                 'meta': 'meta_1.23.z3'}
     }
     assert dt.load_data({'u_id':'1.00'}) == {
     '1.23.t2': {'Kurztext': 'KT_t2',
                 'Langtext': 'LT_t2',
                 'Titel': 'Titel_t2',
+                'Ausrichter': 'ul1_BspStamm',
                 'meta': 'meta_1.23.t2'},
     '1.23.z3': {'Kurztext': 'KT_z3',
                 'Langtext': 'LT_z3',
                 'Titel': 'Titel_z3',
+                'Ausrichter': 'ul1_BspStamm',
                 'meta': 'meta_1.23.z3'},
     '1.00.r1': {'Kurztext': 'KT_r1',
                 'Langtext': 'LT_r1',
                 'Titel': 'Titel_r1',
+                'Ausrichter': 'ul1_Leitung',
                 'meta': 'meta_1.00.r1'},
     '1.78.i5': {}
     }
@@ -204,6 +209,7 @@ def test_load_data():
     '2.45.u4': {'Kurztext': 'KT_u4',
                 'Langtext': 'LT_u4',
                 'Titel': 'Titel_u4',
+                'Ausrichter': '* unknown/deleted user *',
                 'meta': 'meta_2.45.u4'}
     }
 

@@ -222,6 +222,9 @@ function pt_row_content_fill(rowdiv, rowdata){
   //   adjust_textarea_height(textareas[i]);
   // }
 
+  rowdiv.querySelector("#Ausrichter .c-stablefield").innerHTML = rowdata.Ausrichter;
+  // console.log(rowdata.Ausrichter);
+
   var p_id = rowdiv.id;
 
   for (ti_date in TI_DATES_ACCESS){
@@ -241,7 +244,10 @@ function pt_row_add_new(tablediv){
   p_id = pt_new_p_id()
   new_row.id = p_id;
   new_row.querySelector("#row_id").innerHTML = p_id;
-  pt_row_content_fill(new_row, DEFAULT_ROW_DATA);
+
+  var new_row_data = DEFAULT_ROW_DATA;
+  new_row_data.Ausrichter = u_info.Name;
+  pt_row_content_fill(new_row, new_row_data);
   tablediv.querySelector("#pt_body").appendChild(new_row);
 
   pt_row_view_expand(new_row);
@@ -353,6 +359,9 @@ function pt_row_content_eval(rowdiv){
     rowdiv.querySelector("#Kurztext").getElementsByClassName("c-input")[0].value;
   data_extract.Langtext =
     rowdiv.querySelector("#Langtext").getElementsByClassName("c-input")[0].value;
+
+  data_extract.Ausrichter =
+    rowdiv.querySelector("#Ausrichter").getElementsByClassName("c-stablefield")[0].innerHTML;
 
   if (!data_extract.Titel){
     valid_input = false;

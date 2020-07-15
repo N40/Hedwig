@@ -11,15 +11,12 @@ import python.static_definitions as sd
 # uklu_io_handler = io_handler("data/users/user_key_list_used")
 
 from python.sqlite_io_tools import User_IO_Handler, SQL_KeyGraveyard_Handler
-user_io_handler = None
-key_graveyard = None
 def init_user_tools():
     global user_io_handler
     global key_graveyard
     user_io_handler = User_IO_Handler(sd.user_db_location)
     key_graveyard  = SQL_KeyGraveyard_Handler(sd.key_graveyard_db_location)
 
-init_user_tools()
 
 #______________________________
 
