@@ -396,12 +396,15 @@ function pt_row_content_time_eva_slots(ti_day_div){
   var slot_walkin   = ti_day_div.querySelector("#slot_walkin   input").checked;
   var ti_prefix = slot_walkin  ?"w":(slot_combined?"c":"s")
 
-  var slot_select   = []
+  var slot_select   = [];
   for (var j = 1; j <= 6; j++) {
     var chk_slot = ti_day_div.querySelector("#slot_"+j+" input").checked;
     if (chk_slot){
       slot_select.push(j);
     }
+  }
+  if (slot_select.length == 0){
+    return null;
   }
 
   var ti_encoded = ti_prefix+'%' + slot_select.join(",") ;
@@ -443,6 +446,10 @@ function pt_row_content_time_fill(ti_day_div, ti_data_string = ""){
 function pt_row_content_time_fill_slots(ti_day_div, ti_data_string){
   var ti_prefix = ti_data_string.split("%")[0];
   var ti_slots = ti_data_string.split("%")[1].split(",")
+  if (ti_slots == [ "" ]){
+    return;
+  }
+
   ti_day_div.querySelector("#slot_combined input").checked = (ti_prefix=="c");
   ti_day_div.querySelector("#slot_walkin   input").checked = (ti_prefix=="w");
 
