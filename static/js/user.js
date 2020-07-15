@@ -6,7 +6,8 @@ var user_dict_to_server = {};
 
 var key_manip_ul_options = {
   "1": "<option value=\"1\">[1] Espuertes</option>",
-  "2": "<option value=\"2\">[2] Prismanien</option>",
+  "2": "<option value=\"2\">[2] Wasteland</option>",
+  "3": "<option value=\"3\">[3] Brownsea Island</option>",
   "T": "<option value=\"T\">[T] Tortuga</option>",
   "0": "<option value=\"0\">[0] Admins</option>"
 }
