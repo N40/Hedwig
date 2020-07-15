@@ -4,19 +4,15 @@ import yaml
 
 import python.static_definitions as sd
 import python.type_tools as tt
-import python.user_tools as ut
 
 # from python.io_tools import json_io_handler
 
 # data_io_handler = json_io_handler("data/content/p_data.json")
 
-from python.sqlite_io_tools import Data_IO_Handler
-def init_data_tools():
-    global data_io_handler
-    data_io_handler = Data_IO_Handler(sd.data_db_location)
+
 # Checking if everything is fine
 # Data_IO_Handler("data/p_data.db", sd.SQL_COLUMNS_DATA)
-
+import python.sqlite_io_tools as siot
 
 #___________________________________
 
@@ -41,6 +37,8 @@ def extract_data(p_input, sub_rights, min_level = 0):
     for field in p_input:
         if field == 'meta':
             continue
+        elif field == 'Ausrichter':
+            continue
         elif (field[:2] == "Z_") and (sub_rights.get("Zeiten", -1) >= min_level):
             p_out[field] = p_input[field]
         elif sub_rights.get(field, -1) >= min_level:
@@ -62,11 +60,11 @@ def load_data(u_info):
     rights = get_rights(u_id)
 
     if u_id[0] == "0":
-        p_data = data_io_handler.load_data_all()
+        p_data = siot.data_io_handler.load_data_all()
     elif u_id[2:4] == "00":
-        p_data = data_io_handler.load_data_many_by_ul_id(u_id[0])
+        p_data = siot.data_io_handler.load_data_many_by_ul_id(u_id[0])
     else:
-        p_data = data_io_handler.load_data_many_by_u_id(u_id)
+        p_data = siot.data_io_handler.load_data_many_by_u_id(u_id)
 
     p_data_pull = {}
     for p_id in p_data:
@@ -78,7 +76,7 @@ def load_data(u_info):
 
         if len(p_data_pull[p_id].keys()):
             try:
-                p_data_pull[p_id]['Ausrichter'] = ut.user_io_handler.load_data_by_x_id(p_id[:4])['Name'];
+                p_data_pull[p_id]['Ausrichter'] = siot.user_io_handler.load_data_by_x_id(p_id[:4])['Name'];
             except:
                 p_data_pull[p_id]['Ausrichter'] = '* unknown/deleted user *';
 
@@ -100,4 +98,4 @@ def save_data(u_info, p_data_push):
 
         p_updates[p_id] = p_change
 
-    data_io_handler.update_data(p_updates)
+    siot.data_io_handler.update_data(p_updates)

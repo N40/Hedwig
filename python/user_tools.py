@@ -10,12 +10,7 @@ import python.static_definitions as sd
 # user_io_handler = json_io_handler("data/users/user_dict.json")
 # uklu_io_handler = io_handler("data/users/user_key_list_used")
 
-from python.sqlite_io_tools import User_IO_Handler, SQL_KeyGraveyard_Handler
-def init_user_tools():
-    global user_io_handler
-    global key_graveyard
-    user_io_handler = User_IO_Handler(sd.user_db_location)
-    key_graveyard  = SQL_KeyGraveyard_Handler(sd.key_graveyard_db_location)
+import python.sqlite_io_tools as siot
 
 
 #______________________________
@@ -41,8 +36,8 @@ def load_user_information(key):
             "Name": "AdminBackdoor",
             "Unterlager": sd.unterlager_dict[0],
         }
-        
-    u_info = user_io_handler.fetch_u_info_by_key(key)
+    
+    u_info = siot.user_io_handler.fetch_u_info_by_key(key)
     if u_info is not None:
         u_info["Unterlager"] = sd.unterlager_dict[int(u_info["u_id"][0])]
         return u_info
@@ -77,7 +72,7 @@ def key_exists(key):
     #         if (key in user_dict[u_id]["Keys"]):
     #             return True
 
-    if (user_io_handler.fetch_u_info_by_key(key) is not None):
+    if (siot.user_io_handler.fetch_u_info_by_key(key) is not None):
         return True;
     elif (key_graveyard.check_for_key(key)):
         return True
@@ -87,7 +82,7 @@ def key_exists(key):
 def id_exists(u_id):
     # user_dict = user_io_handler.load()
     # return (new_id in user_dict)
-    return user_io_handler._check_for_id(u_id)
+    return siot.user_io_handler._check_for_id(u_id)
 
 def gen_new_u_id(ul_id):
     if (ul_id == "X"):
@@ -102,7 +97,7 @@ def gen_new_u_id(ul_id):
     # open("data/users/user_dict.json", "w").write(json.dumps(user_dict, indent=4))
     # user_io_handler.save({new_id:{}})
 
-    user_io_handler.update_data({
+    siot.user_io_handler.update_data({
         new_id:{'meta': f'uninvoced id, created at {time.strftime("%d.%m.%Y, %H:%M")}'}
     })
 
@@ -129,9 +124,9 @@ def load_user_dict(u_info):
 
 
     if u_id[0] == "0":
-        p_data = user_io_handler.load_data_all()
+        p_data = siot.user_io_handler.load_data_all()
     elif u_id[2:4] == "00":
-        p_data = user_io_handler.load_data_many_by_ul_id(u_id[0])
+        p_data = siot.user_io_handler.load_data_many_by_ul_id(u_id[0])
     else:
         p_data = {}
 
@@ -157,4 +152,4 @@ def update_user_dict(u_info, user_dict_push):
         return
 
     # user_io_handler.save(user_dict_updates)
-    user_io_handler.update_data(user_dict_updates)
+    siot.user_io_handler.update_data(user_dict_updates)

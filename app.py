@@ -9,6 +9,11 @@ import json
 from python.data_tools import *
 from python.user_tools import *
 
+import python.sqlite_io_tools as siot
+
+siot.init_data_io()
+siot.init_user_io()
+
 
 app = Flask(__name__)
 

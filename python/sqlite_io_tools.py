@@ -3,6 +3,19 @@ import re
 import time
 
 from python.static_definitions import SQL_COLUMNS_DATA
+import python.static_definitions as sd
+
+# INIT
+def init_user_io():
+    global user_io_handler
+    global key_graveyard
+    user_io_handler = User_IO_Handler(sd.user_db_location)
+    key_graveyard  = SQL_KeyGraveyard_Handler(sd.key_graveyard_db_location)
+
+def init_data_io():
+    global data_io_handler
+    data_io_handler = Data_IO_Handler(sd.data_db_location)
+
 
 # TYPE ASSERTIONS FOR ERROR CHECKING
 from python.type_tools import *

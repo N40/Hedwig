@@ -3,6 +3,12 @@ function init_tables() {
   table_tmp = document.getElementsByTagName("template")[0].content.querySelector("#tmp_pt_main");
 
   // #Eigen
+  try{
+    var is_admin = (u_info.u_id[0]=="0");
+  } catch {
+    var is_admin = false;
+  }
+  if (!is_admin){
   new_table = document.importNode(table_tmp, true);
   new_table.id = "Mein_Programm";
   new_table.querySelector("#btn_row_add_new").classList.toggle("w3-hide");
@@ -10,6 +16,7 @@ function init_tables() {
     pt_row_add_new(this.closest(".c-ptable"));
   })
   document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Mein_Programm").appendChild(new_table)
+  }
 
   // #Wahlprogramm
   new_table = document.importNode(table_tmp, true);
