@@ -4,7 +4,7 @@
 import os
 import re
 
-def setup_test_databases(dt, ut):
+def setup_test_databases():
     import python._pytest.test_static_definitions as test_sd
 
     os.system("""
@@ -13,12 +13,28 @@ def setup_test_databases(dt, ut):
     cp python/_pytest/db_raws/test_key_graveyard_0.db   python/_pytest/test_key_graveyard.db
     """)
 
-    dt.sd.data_db_location = test_sd.data_db_location
-    dt.init_data_tools()
+    # dt.sd.data_db_location = test_sd.data_db_location
+    # dt.init_data_tools()
 
-    ut.sd.user_db_location = test_sd.user_db_location
-    ut.sd.key_graveyard_db_location = test_sd.key_graveyard_db_location
-    ut.init_user_tools()
+    # ut.sd.user_db_location = test_sd.user_db_location
+    # ut.sd.key_graveyard_db_location = test_sd.key_graveyard_db_location
+    # ut.init_user_tools()
+    import python.sqlite_io_tools as siot
+    siot.sd.data_db_location = test_sd.data_db_location
+    siot.sd.user_db_location = test_sd.user_db_location
+    siot.sd.key_graveyard_db_location = test_sd.key_graveyard_db_location
+
+    siot.init_data_io()
+    siot.init_user_io()
+
+    return siot
+
+def setup_test_ut_dt(siot):
+    import python.data_tools as dt
+    import python.user_tools as ut
+    dt.siot = siot
+    ut.siot = siot
+    return ut, dt
 
 # __ TESTING __
 # MASTER STUFF
@@ -41,20 +57,17 @@ def test_imports():
     assert (sys.version.split(".")[0] == "3" and int(sys.version.split(".")[1])>=6)
 
 def test_mock_databases():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot)
 
-    assert dt.data_io_handler._db_location == "python/_pytest/test_p_data.db"
-    assert ut.user_io_handler._db_location == "python/_pytest/test_user_data.db"
-    assert ut.key_graveyard._db_location   == "python/_pytest/test_key_graveyard.db"
+    assert siot.data_io_handler._db_location == "python/_pytest/test_p_data.db"
+    assert siot.user_io_handler._db_location == "python/_pytest/test_user_data.db"
+    assert siot.key_graveyard._db_location   == "python/_pytest/test_key_graveyard.db"
 
 # USER TOOLS
 def test_load_user_information():
-    import python._pytest.test_static_definitions as test_sd
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot)
 
     assert ut.load_user_information("") is None
     assert ut.load_user_information("Y1X2C3") =={
@@ -65,9 +78,8 @@ def test_load_user_information():
     assert ut.load_user_information("y1x2c3") is None
 
 def test_key_functions():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
     new_key = ut.gen_new_key()
     assert bool(re.match(r"^[A-Z \d\W]{6}$",new_key))
@@ -82,9 +94,8 @@ def test_key_functions():
 
 
 def test_u_id_functions():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
     new_id = ut.gen_new_u_id("3")
     assert bool(re.match(r'^\w.\w\w$', new_id))
@@ -98,9 +109,8 @@ def test_u_id_functions():
     assert ut.id_exists("1.234") is None
 
 def test_load_user_dict():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
     assert ut.load_user_dict({'u_id':'1.23', }) == {}
     assert ut.load_user_dict({'u_id':'1.99', }) == {}
@@ -166,9 +176,8 @@ def test_load_user_dict():
 #     setup_test_databases(dt, ut)
 
 def test_load_data():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
     assert dt.load_data({'a':'b'}) is None
     assert dt.load_data({'u_id':''}) is None
@@ -218,10 +227,9 @@ def test_load_data():
 
 
 def test_save_data():
-    import python.data_tools as dt
-    import python.user_tools as ut
-    setup_test_databases(dt, ut)
-
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
+    
     # negative tests
     dt.save_data({'u_id':'1.00'}, {
     '1.23.t2':{'Titel': 'Titel_t2_modified'}

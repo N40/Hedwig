@@ -57,7 +57,7 @@ def gen_new_key(ul_id = 'X'):
     # used_keys_dict["X_used_keys"].append(key);
     # open("data/users/user_key_list_used.json", "w").write(json.dumps(used_keys_dict, indent=4))
 
-    key_graveyard.add_key(key)
+    siot.key_graveyard.add_key(key)
 
     return key
 
@@ -74,7 +74,7 @@ def key_exists(key):
 
     if (siot.user_io_handler.fetch_u_info_by_key(key) is not None):
         return True;
-    elif (key_graveyard.check_for_key(key)):
+    elif (siot.key_graveyard.check_for_key(key)):
         return True
 
     return False
