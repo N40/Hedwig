@@ -182,8 +182,13 @@ def test_load_data():
     assert dt.load_data({'a':'b'}) is None
     assert dt.load_data({'u_id':''}) is None
     assert dt.load_data({'u_id':'1.x'}) is None
-    assert dt.load_data({'u_id':'1.99'}) == {}
+    assert dt.load_data({'u_id':'3.99'}) == {}
     assert dt.load_data({'u_id':'1.23'}) == {
+    '1.00.r1': {'Ausrichter': 'ul1_Leitung',
+                'Kurztext': 'KT_r1',
+                'Langtext': 'LT_r1',
+                'Titel': 'Titel_r1',
+                'meta': 'meta_1.00.r1'},
     '1.23.t2': {'Kurztext': 'KT_t2',
                 'Langtext': 'LT_t2',
                 'Titel': 'Titel_t2',
@@ -193,9 +198,34 @@ def test_load_data():
                 'Langtext': 'LT_z3',
                 'Titel': 'Titel_z3',
                 'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.z3'}
+                'meta': 'meta_1.23.z3'},
+    '1.78.i5': {}
     }
     assert dt.load_data({'u_id':'1.00'}) == {
+    '1.23.t2': {'Kurztext': 'KT_t2',
+                'Langtext': 'LT_t2',
+                'Titel': 'Titel_t2',
+                'Ausrichter': 'ul1_BspStamm',
+                'meta': 'meta_1.23.t2'},
+    '1.23.z3': {'Kurztext': 'KT_z3',
+                'Langtext': 'LT_z3',
+                'Titel': 'Titel_z3',
+                'Ausrichter': 'ul1_BspStamm',
+                'meta': 'meta_1.23.z3'},
+    '1.00.r1': {'Kurztext': 'KT_r1',
+                'Langtext': 'LT_r1',
+                'Titel': 'Titel_r1',
+                'Ausrichter': 'ul1_Leitung',
+                'meta': 'meta_1.00.r1'},
+    '1.78.i5': {},
+    '2.45.u4': {'Kurztext': 'KT_u4',
+            'Langtext': 'LT_u4',
+            'Titel': 'Titel_u4',
+            'Ausrichter': '* unknown/deleted user *',
+            'meta': 'meta_2.45.u4'}
+    }
+
+    assert dt.load_data({'u_id':'1.99'}) == {
     '1.23.t2': {'Kurztext': 'KT_t2',
                 'Langtext': 'LT_t2',
                 'Titel': 'Titel_t2',
@@ -214,7 +244,7 @@ def test_load_data():
     '1.78.i5': {}
     }
 
-    assert dt.load_data({'u_id':'2.00'}) == {
+    assert dt.load_data({'u_id':'2.33'}) == {
     '2.45.u4': {'Kurztext': 'KT_u4',
                 'Langtext': 'LT_u4',
                 'Titel': 'Titel_u4',
@@ -223,6 +253,8 @@ def test_load_data():
     }
 
     assert list(dt.load_data({'u_id':'0.__'}).keys()) == \
+        ['1.00.r1', '1.23.t2', '1.23.z3', '2.45.u4', '1.78.i5']
+    assert list(dt.load_data({'u_id':'3.00'}).keys()) == \
         ['1.00.r1', '1.23.t2', '1.23.z3', '2.45.u4', '1.78.i5']
 
 

@@ -59,12 +59,14 @@ def load_data(u_info):
 
     rights = get_rights(u_id)
 
-    if u_id[0] == "0":
-        p_data = siot.data_io_handler.load_data_all()
-    elif u_id[2:4] == "00":
-        p_data = siot.data_io_handler.load_data_many_by_ul_id(u_id[0])
-    else:
-        p_data = siot.data_io_handler.load_data_many_by_u_id(u_id)
+    # if u_id[0] == "0":
+    #     p_data = siot.data_io_handler.load_data_all()
+    # elif u_id[2:4] == "00":
+    #     p_data = siot.data_io_handler.load_data_many_by_ul_id(u_id[0])
+    # else:
+    #     p_data = siot.data_io_handler.load_data_many_by_u_id(u_id)
+    p_data = siot.data_io_handler.load_data_all()
+
 
     p_data_pull = {}
     for p_id in p_data:

@@ -9,6 +9,7 @@ import json
 from python.data_tools import *
 from python.user_tools import *
 
+import python.static_definitions as sd
 import python.sqlite_io_tools as siot
 
 siot.init_data_io()
@@ -66,6 +67,16 @@ def logout():
     # (coming later)
     key = request.args.get("key")
     return "ok"
+
+@app.route("/get_static_definitions")
+def get_static_definitions():
+    sdt = {
+        'ti_days':          sd.ti_days,
+        'unterlager_dict':  sd.unterlager_dict,
+        'rights_dict':      sd.rights_dict,
+    }
+
+    return f'static_definitions = {sdt}'
 
 #_____user_manip_____#
 

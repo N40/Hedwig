@@ -91,22 +91,6 @@ var PT_DATA_BIND = {
   "Wahlprogramm":  ()=>extract_data("GL"),
 }
 
-var TI_DATES_ACCESS = {
-    // Wahlprogramm
-    "Z_WP_03_08": -1,
-    "Z_WP_04_08": -1,
-    "Z_WP_05_08": -1,
-    "Z_WP_09_08": -1,
-    "Z_WP_10_08": -1,
-    // Besuchertag
-    "Z_BT_08_08": -1,
-    // Ringezeit
-    "Z_RZ_03_08": -1,
-    "Z_RZ_04_08": -1,
-    "Z_RZ_05_08": -1,
-    "Z_RZ_09_08": -1,
-    "Z_RZ_10_08": -1,
-}
 
 var TI_DATES_FORM = {
   "Z_WP_03_08": "Wahlprogramm, 03.08",
@@ -130,6 +114,7 @@ var DEFAULT_ROW_DATA = {
   "Langtext": "",
 }
 
+
 // ---- FUNCTIONALITY SECTION ---- //
 function pt_table_init(tablediv, data_object) {
   var table_body = tablediv.querySelector("#pt_body");
@@ -144,6 +129,7 @@ function pt_table_init(tablediv, data_object) {
     new_row.querySelector("#row_id").innerHTML = p_id;
     // new_row.expanded = false;
     pt_row_content_fill(new_row, data_object[p_id]);
+    pt_row_adjust_access(new_row, p_id);
     table_body.appendChild(new_row);
   }
 }
@@ -167,8 +153,8 @@ function pt_row_create_new(){
   var ti_slots_temp = ti_templates_DOM.querySelector(".c-ti-slots")
   var ti_text_temp  = ti_templates_DOM.querySelector(".c-ti-text")
 
-  for (var ti_date in TI_DATES_ACCESS) {
-    if (!(TI_DATES_ACCESS[ti_date] == -1 || TI_DATES_ACCESS[ti_date].includes(parseInt(u_info.u_id[0])))){
+  for (var ti_date in static_definitions.ti_days) {
+    if (!(static_definitions.ti_days[ti_date] == -1 || static_definitions.ti_days[ti_date].includes(parseInt(u_info.u_id[0])))){
       continue
     }
 
@@ -216,11 +202,11 @@ function pt_row_create_new(){
 
 
 function pt_row_content_fill(rowdiv, rowdata){
-  rowdiv.querySelector("#Titel").getElementsByClassName("c-input")[0].value = 
+  rowdiv.querySelector("#Titel .c-input").value = 
     rowdata.Titel;
-  rowdiv.querySelector("#Kurztext").getElementsByClassName("c-input")[0].value = 
+  rowdiv.querySelector("#Kurztext .c-input").value = 
     rowdata.Kurztext;
-  rowdiv.querySelector("#Langtext").getElementsByClassName("c-input")[0].value = 
+  rowdiv.querySelector("#Langtext .c-input").value = 
     rowdata.Langtext;
 
   // textareas = new_row.getElementsByTagName("textarea");
@@ -229,13 +215,15 @@ function pt_row_content_fill(rowdiv, rowdata){
   //   adjust_textarea_height(textareas[i]);
   // }
 
-  rowdiv.querySelector("#Ausrichter .c-stablefield").innerHTML = rowdata.Ausrichter;
+  rowdiv.querySelector("#Ausrichter .c-input").innerHTML = rowdata.Ausrichter;
   // console.log(rowdata.Ausrichter);
+
+  rowdiv.querySelector("#tooltip_meta").innerHTML = rowdata.meta || "";
 
   var p_id = rowdiv.id;
 
-  for (ti_date in TI_DATES_ACCESS){
-    if (!(TI_DATES_ACCESS[ti_date] == -1 || p_id in TI_DATES_ACCESS[ti_date])){
+  for (ti_date in static_definitions.ti_days){
+    if (!(static_definitions.ti_days[ti_date] == -1 || p_id in static_definitions.ti_days[ti_date])){
       continue
     }
 
@@ -244,6 +232,29 @@ function pt_row_content_fill(rowdiv, rowdata){
 
 }
 
+function pt_row_adjust_access(rowdiv, p_id){
+  var afields = Array.from(rowdiv.querySelectorAll(".c-ti-day.c-active"))
+  afields.push(...rowdiv.querySelectorAll(".c-input.c-active"))
+
+  rowdiv.edit_rights = false;
+  rowdiv.del_rights  = rights_get_field_access(p_id,"Titel");
+
+  for (var i = 0; i < afields.length; i++) {
+    var parent = afields[i].closest(".c-field");
+    var axx = rights_get_field_access(p_id,parent.id)
+    switch (axx){
+      case 1:
+        rowdiv.edit_rights = true;
+        break;
+      case 0:
+        afields[i].classList.remove("c-active");
+        break;
+      case -1:
+        parent.style.display = "none";
+    }
+  }
+  return;
+}
 
 
 function pt_row_add_new(tablediv){
@@ -257,6 +268,7 @@ function pt_row_add_new(tablediv){
   pt_row_content_fill(new_row, new_row_data);
   tablediv.querySelector("#pt_body").appendChild(new_row);
 
+  pt_row_adjust_access(new_row, p_id)
   pt_row_view_expand(new_row);
   pt_row_make_writable(new_row);
 };
@@ -299,6 +311,8 @@ function pt_row_save_changes(rowdiv){
   local_data[p_id]["meta"] =
     'Modified at ['+get_date_formated()+'] by user-id ['+u_info.u_id+']';
 
+  rowdiv.querySelector("#tooltip_meta").innerHTML = local_data[p_id]["meta"];
+
   data_to_server[p_id] = local_data[p_id];
   update_changes_to_server();
   update_debug_div();
@@ -309,19 +323,23 @@ function pt_row_save_changes(rowdiv){
 
 function pt_row_make_writable(rowdiv) {
   rowdiv.style.height = "auto"
-  var inputfields = rowdiv.getElementsByClassName("c-input");
+  var inputfields = rowdiv.querySelectorAll(".c-input.c-active");
   for (var i = inputfields.length - 1; i >= 0; i--) {
     inputfields[i].readOnly = false;
   }
 
   // ccb
-  var time_input_subdivs = rowdiv.getElementsByClassName("c-ti-day")
+  var time_input_subdivs = rowdiv.querySelectorAll(".c-ti-day.c-active")
   for (var i = time_input_subdivs.length - 1; i >= 0; i--) {
     time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background = "white"
     time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background = "white";
-    checkboxes = time_input_subdivs[i].getElementsByTagName("input")
+    var checkboxes = time_input_subdivs[i].getElementsByTagName("input")
     for (var j = checkboxes.length - 1; j >= 0; j--) {
       checkboxes[j].disabled = ""
+    }
+    var textbox = time_input_subdivs[i].querySelector(".c-ti-text input")
+    if (textbox){
+      textbox.readOnly = false;
     }
   }
 
@@ -347,6 +365,10 @@ function pt_row_make_static(rowdiv) {
         checkboxes[j].disabled = "disabled";
       }
     }
+    var textbox = time_input_subdivs[i].querySelector(".c-ti-text input")
+    if (textbox){
+      textbox.readOnly = true;
+    }
   }
 
   rowdiv.writable = false;
@@ -360,15 +382,24 @@ function pt_row_content_eval(rowdiv){
   var data_extract = {};
   var valid_input = true;
 
-  data_extract.Titel = 
-    rowdiv.querySelector("#Titel").getElementsByClassName("c-input")[0].value;
-  data_extract.Kurztext =
-    rowdiv.querySelector("#Kurztext").getElementsByClassName("c-input")[0].value;
-  data_extract.Langtext =
-    rowdiv.querySelector("#Langtext").getElementsByClassName("c-input")[0].value;
+  var base_field_names = ['Titel', 'Kurztext', 'Langtext', 'Ausrichter'];
+  for (var i = 0; i < base_field_names.length; i++) {
+    var ifield = rowdiv.querySelector("#"+base_field_names[i]+" .c-input.c-active");
+    if (ifield){
+      data_extract[base_field_names[i]] = ifield.value
+    }
+  }
 
-  data_extract.Ausrichter =
-    rowdiv.querySelector("#Ausrichter").getElementsByClassName("c-stablefield")[0].innerHTML;
+  // data_extract.Titel = 
+  //   rowdiv.querySelector("#Titel").getElementsByClassName("c-input")[0].value;
+  // data_extract.Kurztext =
+  //   rowdiv.querySelector("#Kurztext").getElementsByClassName("c-input")[0].value;
+  // data_extract.Langtext =
+  //   rowdiv.querySelector("#Langtext").getElementsByClassName("c-input")[0].value;
+
+  // data_extract.Ausrichter =
+  //   rowdiv.querySelector("#Ausrichter").getElementsByClassName("c-stablefield")[0].innerHTML;
+
 
   if (!data_extract.Titel){
     valid_input = false;
@@ -524,10 +555,10 @@ function pt_row_btn_update(row){
   var is_new_row = !(row.id in local_data);
 
   btn_close.active  = (!is_new_row && row.expanded);
-  btn_delete.active = (row.expanded);
-  btn_done.active   = (row.expanded && row.writable);
-  btn_edit.active   = (row.expanded && !row.writable);
-  btn_undo.active   = (row.expanded && row.writable && !is_new_row);
+  btn_delete.active = (row.expanded && row.del_rights);
+  btn_done.active   = (row.expanded && row.writable  && row.edit_rights);
+  btn_edit.active   = (row.expanded && !row.writable && row.edit_rights);
+  btn_undo.active   = (row.expanded && row.writable && !is_new_row && row.edit_rights);
 
   var btns = row.getElementsByClassName("context-icons");
   for (var i = 0; i < btns.length; i++) {
@@ -537,13 +568,15 @@ function pt_row_btn_update(row){
 
 function pt_row_btn_adjust_visual(btn){
   if (btn.active){
-    btn.classList.remove("w3-text-grey");
-    btn.classList.remove("w3-hover-text-white")
+    btn.classList.remove("w3-opacity-max");
+    // btn.classList.remove("w3-hover-text-white")
     btn.classList.add("w3-hover-green");
+    btn.classList.remove("w3-hover-light-grey")
   } else {
-    btn.classList.add("w3-text-grey");
-    btn.classList.add("w3-hover-text-white")
+    btn.classList.add("w3-opacity-max");
+    // btn.classList.add("w3-hover-text-white")
     btn.classList.remove("w3-hover-green");
+    btn.classList.add("w3-hover-light-grey")
 
   }
 }
@@ -586,7 +619,7 @@ function pt_row_view_expand(rowdiv){
 }
 
 function pt_row_view_collapse(rowdiv){
-  console.log("collapsing");
+  // console.log("collapsing");
   pt_row_make_static(rowdiv);
   rowdiv.style.height = rowdiv.children[0].scrollHeight + 'px';
   var cols = rowdiv.getElementsByClassName("c-stable");
@@ -646,4 +679,41 @@ function pt_new_p_id(){
   while(new_p_id in local_data)
     new_p_id = u_id+'.'+parseInt(36*(1+35*Math.random())).toString(36);
   return new_p_id  
+}
+
+
+// ----- ACCESS RIGHTS HANDLING ------
+function rights_get_rights(u_id){
+  if (u_id[0]=="0"){
+    return static_definitions.rights_dict["Admin"]
+  } else if (u_id.split(".")[1] == "00"){
+    return static_definitions.rights_dict["ULL"]
+  } else {
+    return static_definitions.rights_dict["Stamm"]
+  }
+}
+function rights_get_subrights(u_id, p_id){
+  var _rights = rights_get_rights(u_id);
+  if (p_id.slice(0,4) == u_id){
+    return _rights["Eigen"]
+  } else if (p_id[0] == u_id[0]){
+    return _rights["UL"]
+  } else {
+    return _rights["GL"]
+  }
+}
+
+function rights_get_field_access(p_id, field){
+  var u_id = u_info.u_id;
+  var subrights = rights_get_subrights(u_id, p_id)
+
+  if (field[0] == "Z"){
+    return subrights["Zeiten"];
+  }
+  else if (field in subrights){
+    return subrights[field];
+  }
+
+  return -1;
+
 }
