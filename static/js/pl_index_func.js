@@ -53,6 +53,7 @@ function pl_add_page(n = 3){
 		new_row.querySelector("#Id").innerHTML = p_id
 		new_row.querySelector("#Titel").innerHTML = local_data[p_id].Titel
 		new_row.querySelector("#Beschreibung").innerHTML = local_data[p_id].Langtext
+		pl_row_tags(new_row, local_data[p_id]);
 		
 		new_pl_subpage.querySelector(".pl_subpage_content").appendChild(new_row)
 	}
@@ -66,4 +67,23 @@ function pl_add_page(n = 3){
 		pl_document.body.appendChild(new_pl_plage)
 		
 	}
+}
+
+var tag_reference = {
+	"International": 	"public",
+	"Hinweise": 		"report",
+	"mit_Anmeldung": 	"playlist_add_check"
+}
+
+function pl_row_tags(rowdiv, rowdata){
+	new_row.querySelector("#Tags").innerHTML = "";
+ 	var true_tags_list = (rowdata.Tags||"").split(":");
+ 	for (var i = 0; i < true_tags_list.length; i++) {
+ 		if (true_tags_list[i]){
+ 			new_row.querySelector("#Tags").innerHTML +=
+ 				'<i class="material-icons pl_tags">'+
+ 					tag_reference[true_tags_list[i]]
+ 				+'</i>\n';
+ 		}
+ 	}
 }

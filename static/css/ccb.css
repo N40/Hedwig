@@ -41,7 +41,7 @@ document.querySelector("#One input").checked
 }
 
 /* Create a custom checkbox */
-.ccb-checkmark {
+.ccb-checkmark, .ccb-radio {
   position: absolute;
   top: 0;
   left: 0;
@@ -50,7 +50,7 @@ document.querySelector("#One input").checked
   background-color: #eee;
 }
 
-.ccb-checkmark-hover {
+.ccb-checkmark-hover, .ccb-radio-hover {
   position: absolute;
   top: 0;
   left: 0;
@@ -61,6 +61,10 @@ document.querySelector("#One input").checked
   border-color: inherit;
   border-width: 1px;
   border-radius: 2px;
+}
+
+.ccb-radio-hover {
+  border-radius: 50%;
 }
 
 /* On mouse-over, add a grey background color */
@@ -90,22 +94,25 @@ document.querySelector("#One input").checked
 
 
 
-.ccb-container input:checked ~ .ccb-checkmark-hover:after {
+.ccb-container input:checked ~ .ccb-checkmark-hover:after,
+.ccb-container input:checked ~ .ccb-radio-hover:after {
   display: block;
   opacity: 1	
 }
-.ccb-container:hover input:checked ~ .ccb-checkmark-hover:after {
+.ccb-container:hover input:checked ~ .ccb-checkmark-hover:after,
+.ccb-container:hover input:checked ~ .ccb-radio-hover:after {
   display: block;
   opacity: 1;	
 }
-.ccb-container:hover input   ~ .ccb-checkmark-hover:after {
+.ccb-container:hover input   ~ .ccb-checkmark-hover:after,
+.ccb-container:hover input   ~ .ccb-radio-hover:after {
   display: block;
   opacity: .5;	
 }
 
 
 /* Create the ccb-checkmark/indicator (hidden when not checked) */
-.ccb-checkmark:after, .ccb-checkmark-hover:after {
+.ccb-checkmark:after, .ccb-checkmark-hover:after, .ccb-radio-hover:after {
   content: "";
   position: absolute;
   display: none;
@@ -113,7 +120,8 @@ document.querySelector("#One input").checked
 
 /* Show the ccb-checkmark when checked */
 .ccb-container input:checked ~ .ccb-checkmark:after,
-.ccb-container input:checked ~ .ccb-checkmark-hover:after {
+.ccb-container input:checked ~ .ccb-checkmark-hover:after,
+.ccb-container input:checked ~ .ccb-radio-hover:after {
   display: block;
 }
 
@@ -130,7 +138,8 @@ document.querySelector("#One input").checked
   transform: rotate(45deg);
 }
 
-.ccb-container .ccb-checkmark-hover:after {
+.ccb-container .ccb-checkmark-hover:after,
+.ccb-container .ccb-radio-hover:after {
   left: 6px;
   top: 1px;
   width: 8px;

@@ -15,11 +15,14 @@
 .c-rowid{
   height: 0;
   position: relative;
-  left: -14px;
+  left: -8px;
   top: -8px;
   color: blue;
 }
 
+.c-padding{
+  padding: 6px 0 !important;
+}
 
 input {
   width: 100%;

@@ -7,6 +7,11 @@ SQL_COLUMNS_DATA = [
     "Kurztext",
     "Langtext",
     "N_TN",
+    "Ort",
+    "Tags",
+    "Geld_Anfrage",
+    "Geld_Limit",
+    "mit_Anmeldung", # will probably remain empty due to redundancy with tags
     #
     "Z_RZ_03_08",
     "Z_RZ_04_08",
@@ -78,6 +83,8 @@ rights_dict = {
             'Geld_Limit'    : 0 ,
             'Zeiten'        : 1 ,
             'Ausrichter'    : 1 ,
+            'Ort'           : 1 ,
+            'Tags'          : 1
         },
         "UL": {
             # Stamm ließt die inahltlichen Infos des eigenen ULs
@@ -87,6 +94,8 @@ rights_dict = {
             'N_TN'          : 0 , 
             'Zeiten'        : 0 , 
             'Ausrichter'    : 0 ,
+            'Ort'           : 0 ,
+            'Tags'          : 0
         },
         "GL": {
         }
@@ -101,6 +110,8 @@ rights_dict = {
             'Geld_Limit'    : 1 ,
             'Zeiten'        : 1 ,
             'Ausrichter'    : 1 ,
+            'Ort'           : 1 ,
+            'Tags'          : 1
         },
         "UL": {
             'Titel'         : 0 ,
@@ -108,9 +119,11 @@ rights_dict = {
             'Langtext'      : 0 , 
             'N_TN'          : 0 , 
             'Geld_Anfrage'  : 0 , 
-            'Geld_Limit'    : 1 ,
+            'Geld_Limit'    : 1 , # ULL verwaltet geld
             'Zeiten'        : 0 ,
             'Ausrichter'    : 0 ,
+            'Ort'           : 0 ,
+            'Tags'          : 0
         },
         "GL": {
             'Titel'         : 0 ,
@@ -119,18 +132,23 @@ rights_dict = {
             'N_TN'          : 0 , 
             'Zeiten'        : 0 ,
             'Ausrichter'    : 0 ,
+            'Ort'           : 0 ,
+            'Tags'          : 0
         }
     },
     "Admin":{
         "Eigen":{
-            'Titel'         : 0 ,
-            'Kurztext'      : 0 , 
-            'Langtext'      : 0 , 
-            'N_TN'          : 0 , 
-            'Geld_Anfrage'  : 0 , 
-            'Geld_Limit'    : 0 ,
-            'Zeiten'        : 0 ,
-            'Ausrichter'    : 0 ,
+            # This should not be relevant at any time i guess
+            # 'Titel'         : 0 ,
+            # 'Kurztext'      : 0 , 
+            # 'Langtext'      : 0 , 
+            # 'N_TN'          : 0 , 
+            # 'Geld_Anfrage'  : 0 , 
+            # 'Geld_Limit'    : 0 ,
+            # 'Zeiten'        : 0 ,
+            # 'Ausrichter'    : 0 ,
+            # 'Ort'           : 0 ,
+            # 'Tags'          : 0
         },
         "UL": {
             'Titel'         : 0 ,
@@ -141,6 +159,8 @@ rights_dict = {
             'Geld_Limit'    : 0 ,
             'Zeiten'        : 0 , 
             'Ausrichter'    : 0 ,
+            'Ort'           : 0 ,
+            'Tags'          : 0
         },
         "GL": {
             'Titel'         : 0 ,
@@ -151,6 +171,8 @@ rights_dict = {
             'Geld_Limit'    : 0 ,
             'Zeiten'        : 0 ,
             'Ausrichter'    : 0 , 
+            'Ort'           : 0 ,
+            'Tags'          : 0
         }
 
     }

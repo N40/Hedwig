@@ -188,11 +188,40 @@ function pt_row_create_new(){
 
     ti_checkboxes = new_ti.querySelectorAll("input")
     for (var j = ti_checkboxes.length - 1; j >= 0; j--) {
-      ti_checkboxes[j].disabled = "disabled"
+      ti_checkboxes[j].disabled = "disabled";
     }
-
-
   }
+
+  var tag_checkboxes = new_row.querySelectorAll("#Tags .c-tag label");
+  for (var i = 0; i < tag_checkboxes.length; i++) {
+    tag_checkboxes[i].querySelector("span").style.background = "";
+    tag_checkboxes[i].querySelector("input").disabled = "disabled";
+  }
+
+  var tag_mA_checkboxes_input = new_row.querySelectorAll("#Tags .c-tag #mindest_Alter label input");
+  for (var i = 0; i < tag_mA_checkboxes_input.length; i++) {
+    tag_mA_checkboxes_input[i].addEventListener("input",function(){
+      if (this.checked){
+        var tag_mA = this.closest("#mindest_Alter");
+        var all_inputs = tag_mA.querySelectorAll("#Tags .c-tag #mindest_Alter label input")
+        for (var i = 0; i < all_inputs.length; i++) {
+          if (this != all_inputs[i]){
+            all_inputs[i].checked = false;
+          }
+        }
+      }
+    })
+  }
+
+
+
+  var Ort_radio_btns = new_row.querySelectorAll("#Ort label input");
+  rnd_id = Math.random().toString().slice(2,10);
+  Ort_radio_btns[0].name += rnd_id;
+  Ort_radio_btns[1].name += rnd_id;
+  Ort_radio_btns[0].addEventListener("input", pt_row_place_radio_react);
+  Ort_radio_btns[1].addEventListener("input", pt_row_place_radio_react);
+  pt_row_place_radio_react.call(Ort_radio_btns[0])
 
   pt_row_btn_init(new_row);
 
@@ -200,6 +229,12 @@ function pt_row_create_new(){
 
 }
 
+function pt_row_place_radio_react(){
+  var place_field = this.closest("#Ort");
+  place_field.querySelector("#Ort_cstm #cstmstr_Ort_x").readOnly = !(
+    place_field.querySelector("#Ort_cstm label input").checked &&
+    !place_field.readOnly)
+}
 
 function pt_row_content_fill(rowdiv, rowdata){
   rowdiv.querySelector("#Titel .c-input").value = 
@@ -208,15 +243,27 @@ function pt_row_content_fill(rowdiv, rowdata){
     rowdata.Kurztext;
   rowdiv.querySelector("#Langtext .c-input").value = 
     rowdata.Langtext;
+  rowdiv.querySelector("#Geld_Anfrage .c-input").value = 
+    rowdata.Geld_Anfrage;
+  rowdiv.querySelector("#Geld_Limit .c-input").value = 
+    rowdata.Geld_Limit;
 
+
+  rowdiv.querySelector("#Ausrichter .c-input").innerHTML =
+    rowdata.Ausrichter;
   // textareas = new_row.getElementsByTagName("textarea");
   // for (var i = textareas.length - 1; i >= 0; i--) {
   //   console.log(textareas[i])
   //   adjust_textarea_height(textareas[i]);
   // }
 
-  rowdiv.querySelector("#Ausrichter .c-input").innerHTML = rowdata.Ausrichter;
   // console.log(rowdata.Ausrichter);
+
+  // tags
+  pt_row_content_tags_fill(rowdiv, rowdata);
+
+  // places
+  pt_row_content_place_fill(rowdiv.querySelector("#Ort"), rowdata);
 
   rowdiv.querySelector("#tooltip_meta").innerHTML = rowdata.meta || "";
 
@@ -329,6 +376,7 @@ function pt_row_make_writable(rowdiv) {
   }
 
   // ccb
+  // time
   var time_input_subdivs = rowdiv.querySelectorAll(".c-ti-day.c-active")
   for (var i = time_input_subdivs.length - 1; i >= 0; i--) {
     time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background = "white"
@@ -341,6 +389,20 @@ function pt_row_make_writable(rowdiv) {
     if (textbox){
       textbox.readOnly = false;
     }
+  }
+  // place
+  var place_radio_btns = rowdiv.querySelectorAll("#Ort.c-active label");
+  rowdiv.querySelector("#Ort").readOnly = false;
+  for (var i = place_radio_btns.length - 1; i >= 0; i--) {
+    place_radio_btns[i].querySelector("input").disabled = ""
+    place_radio_btns[i].querySelector("span").style.background = "white";
+  }
+  pt_row_place_radio_react.call(place_radio_btns[0]);
+  // tags
+  var tag_checkboxes = rowdiv.querySelectorAll(".c-active#Tags .c-tag label");
+  for (var i = 0; i < tag_checkboxes.length; i++) {
+    tag_checkboxes[i].querySelector("span").style.background = "white";
+    tag_checkboxes[i].querySelector("input").disabled = "";
   }
 
   // cross-function feature
@@ -370,6 +432,27 @@ function pt_row_make_static(rowdiv) {
       textbox.readOnly = true;
     }
   }
+  // places
+  var place_radio_btns = rowdiv.querySelectorAll("#Ort label");
+  rowdiv.querySelector("#Ort").readOnly = true;
+  var i_chk;
+  for (var i = place_radio_btns.length - 1; i >= 0; i--) {
+    // hack in oder to avoid changability
+    var checked = place_radio_btns[i].querySelector("input").checked;
+    place_radio_btns[i].querySelector("input").disabled =
+      !checked;
+    if (checked){i_chk = i};
+    place_radio_btns[i].querySelector("span").style.background = "";
+  }
+  place_radio_btns[i_chk].querySelector("input").checked = true;
+  pt_row_place_radio_react.call(place_radio_btns[0]);
+  // tags
+  var tag_checkboxes = rowdiv.querySelectorAll("#Tags .c-tag label");
+  for (var i = 0; i < tag_checkboxes.length; i++) {
+    tag_checkboxes[i].querySelector("span").style.background = "";
+    tag_checkboxes[i].querySelector("input").disabled = "disabled";
+  }
+
 
   rowdiv.writable = false;
   pt_row_btn_update(rowdiv);
@@ -382,7 +465,7 @@ function pt_row_content_eval(rowdiv){
   var data_extract = {};
   var valid_input = true;
 
-  var base_field_names = ['Titel', 'Kurztext', 'Langtext', 'Ausrichter'];
+  var base_field_names = ['Titel', 'Kurztext', 'Langtext', 'Ausrichter', 'Geld_Anfrage', 'Geld_Limit'];
   for (var i = 0; i < base_field_names.length; i++) {
     var ifield = rowdiv.querySelector("#"+base_field_names[i]+" .c-input.c-active");
     if (ifield){
@@ -400,6 +483,22 @@ function pt_row_content_eval(rowdiv){
   // data_extract.Ausrichter =
   //   rowdiv.querySelector("#Ausrichter").getElementsByClassName("c-stablefield")[0].innerHTML;
 
+  // places
+  try {
+    data_extract["Ort"] = pt_row_content_place_eval(rowdiv);
+  } catch {
+    valid_input = false;
+    console.log("Invalid 'Ort' input");
+  }
+
+  // tags
+  try {
+    data_extract["Tags"] = pt_row_content_tags_eval(rowdiv);
+  } catch {
+    valid_input = false;
+    console.log("Invalid 'Tags' input");
+  }
+
 
   if (!data_extract.Titel){
     valid_input = false;
@@ -413,6 +512,7 @@ function pt_row_content_eval(rowdiv){
       // console.log(data_extract[ti_day_divs[i].id])
     } catch {
       valid_input = false;
+      console.log("Invalid 'Zeiten' input")
     }
   }
 
@@ -423,6 +523,67 @@ function pt_row_content_eval(rowdiv){
   }
 }
 
+function pt_row_content_tags_eval(rowdiv){
+  var tags_div = rowdiv.querySelector("#Tags.c-active");
+  var tags_encode;
+  var true_tags_list = [];
+  var tags_names = ["International", "mit_Anmeldung", "Hinweise"]
+  for (var i = 0; i < tags_names.length; i++) {
+    if (tags_div.querySelector("#"+tags_names[i]+" input").checked){
+      true_tags_list.push(tags_names[i]);
+    }
+  }
+
+  var tag_mAs = ["mA_10", "mA_13", "mA_16"];
+  for (var i = 0; i < tag_mAs.length; i++) {
+    if (tags_div.querySelector("#mindest_Alter #"+tag_mAs[i]+" input").checked){
+      true_tags_list.push(tag_mAs[i]);
+    }
+  }
+
+  return ":"+true_tags_list.join(":")+":";
+}
+
+function pt_row_content_tags_fill(rowdiv, rowdata){
+  var tags_div = rowdiv.querySelector("#Tags.c-active");
+  var true_tags_list = (rowdata.Tags||"").split(":");
+
+  var tags_names = ["International", "mit_Anmeldung", "Hinweise"];
+  for (var i = 0; i < tags_names.length; i++) {
+    if (list_contains_element(true_tags_list, tags_names[i])){
+      tags_div.querySelector("#"+tags_names[i]+" input").checked = true;
+    }
+  }
+
+  var tag_mAs = ["mA_10", "mA_13", "mA_16"];
+  for (var i = 0; i < tag_mAs.length; i++) {
+    if (list_contains_element(true_tags_list,tag_mAs[i])){
+      tags_div.querySelector("#mindest_Alter #"+tag_mAs[i]+" input").checked = true;
+    };
+  }
+}
+
+
+function pt_row_content_place_eval(rowdiv){
+  var place_div = rowdiv.querySelector("#Ort.c-active");
+  var place_encode;
+  if (place_div.querySelector("#Ort_std label input").checked){
+    place_encode = "std%";
+  } else if (place_div.querySelector("#Ort_cstm label input").checked){
+    place_encode = "cstm%" + place_div.querySelector("#Ort_cstm #cstmstr_Ort_x").value;
+  }
+  return place_encode;
+}
+
+function pt_row_content_place_fill(place_div, rowdata){
+  var [type, cstmstr] = (rowdata.Ort || "std").split("%");
+  place_div.querySelector("#Ort_std label input").checked  = (type=="std");
+  place_div.querySelector("#Ort_cstm label input").checked = (type=="cstm");
+  place_div.querySelector("#Ort_cstm #cstmstr_Ort_x").value = cstmstr || "";
+  place_div.querySelector("#Ort_std label").children[0].before(" von "+rowdata.Ausrichter)
+}
+
+
 function pt_row_content_time_eval(ti_day_div){
   var ti_active = ti_day_div.querySelector("input").checked
   if (!ti_active){
@@ -432,13 +593,13 @@ function pt_row_content_time_eval(ti_day_div){
   var ti_type = ti_day_div.id.split("_")[1];
 
   if (ti_type=="WP"){
-    return pt_row_content_time_eva_slots(ti_day_div);
+    return pt_row_content_time_eval_slots(ti_day_div);
   } else if (ti_type=="BT"||ti_type=="RZ"){
-    return pt_row_content_time_eva_text(ti_day_div);
+    return pt_row_content_time_eval_text(ti_day_div);
   }
 }
 
-function pt_row_content_time_eva_slots(ti_day_div){
+function pt_row_content_time_eval_slots(ti_day_div){
   var slot_combined = ti_day_div.querySelector("#slot_combined input").checked;
   var slot_walkin   = ti_day_div.querySelector("#slot_walkin   input").checked;
   var ti_prefix = slot_walkin  ?"w":(slot_combined?"c":"s")
@@ -458,7 +619,7 @@ function pt_row_content_time_eva_slots(ti_day_div){
   return ti_encoded;
 }
 
-function pt_row_content_time_eva_text(ti_day_div){
+function pt_row_content_time_eval_text(ti_day_div){
   var ti_prefix = "t";
 
   var ti_text = ti_day_div.querySelector("#ti_text").value;
@@ -593,7 +754,7 @@ function pt_row_view_expand(rowdiv){
   var inputs = rowdiv.getElementsByClassName("c-input");
   for (var i = cols.length - 1; i >= 0; i--) {
     cols[i].classList.replace("w3-col", "w3-row-padding");
-    cols[i].classList.add("w3-padding-small");
+    cols[i].classList.add("c-padding");
     fileds[i].classList.add("w3-col");
     heads[i].classList.replace("w3-hide", "w3-col");
   }
@@ -629,7 +790,7 @@ function pt_row_view_collapse(rowdiv){
   var inputs = rowdiv.getElementsByClassName("c-input");
   for (var i = cols.length - 1; i >= 0; i--) {
     cols[i].classList.replace("w3-row-padding", "w3-col");
-    cols[i].classList.remove("w3-padding-small");
+    cols[i].classList.remove("c-padding");
     fileds[i].classList.remove("w3-col");
     heads[i].classList.replace("w3-col", "w3-hide");
   }
@@ -679,6 +840,15 @@ function pt_new_p_id(){
   while(new_p_id in local_data)
     new_p_id = u_id+'.'+parseInt(36*(1+35*Math.random())).toString(36);
   return new_p_id  
+}
+
+function list_contains_element(array, element){
+  for (var i = 0; i < array.length; i++) {
+    if( array[i]==element){
+      return true;
+    }
+  }
+  return false;
 }
 
 

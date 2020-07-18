@@ -23,7 +23,7 @@ function pull_data(callback = function(){return;}){
     url = "data/pull_data?key=" + u_info.key;
     ajax_get(url, function(response){
         data_from_server = JSON.parse(response);
-        local_data = data_from_server;
+        local_data = JSON.parse(response);
         update_debug_div();
         callback();
     })

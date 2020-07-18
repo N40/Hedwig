@@ -53,7 +53,7 @@ html, body{
 </div>
 
 <div class="c-rrow w3-row-padding w3-border-top w3-hover-blue" id="tmp_p_tablerow">
-  <div class="c-spacer w3-padding-small ">
+  <div class="c-spacer c-padding ">
     <div id="row_id" class=" w3-small c-rowid">????</div>
     <div class="w3-hide w3-padding-small c-tier2 w3-col" style="display: flow-root;">
       <i class="material-icons context-icons w3-button w3-hover-green" id="btn_close" 
@@ -108,14 +108,98 @@ html, body{
          <input class="w3-border-0 c-input c-active" type="number" min="0" readonly>
       </div>
     </div>
+    <div class="c-stable c-tier2 w3-col w3-hide c-field" id="Geld_Limit">
+      <div class="c-stablehead w3-hide s3">Geld Limit</div>
+      <div class="c-stablefield s9" >
+         <input class="w3-border-0 c-input c-active" type="number" min="0" readonly>
+      </div>
+    </div>
+
+    <div class="c-stable c-tier2 w3-col w3-hide c-field c-active" id="Ort">
+      <div class="c-stablehead w3-hide s3">Ort</div>
+      <div class="c-stablefield s9 w3-container" >
+
+      <div class="w3-row" id="Ort_std"><label class="ccb-container">
+        Lagergrund
+        <input type="radio" name="radio_Ort_x" checked="checked">
+        <span class="ccb-radio-hover w3-border"></span>
+      </label></div> 
+      <div class="w3-row" id="Ort_cstm" style="display: flex;">
+        <label class="ccb-container"  style="min-width: 130px">
+          Anderer Ort:
+          <input type="radio" name="radio_Ort_x">
+          <span class="ccb-radio-hover w3-border"></span>
+        </label>
+        <input class="w3-border-0 c-input" type="text" id="cstmstr_Ort_x">
+      </div> 
+
+      </div>
+    </div>
+
+    <div class="c-stable c-tier2 w3-col w3-hide c-field c-active" id="Tags">
+      <div class="c-stablehead w3-hide s3">Tags</div>
+      <div class="c-stablefield s9 w3-container" >
+
+        <div class="c-tag w3-row">
+          <label class="ccb-container" id="mit_Anmeldung">
+            <div class="ccb-label">Anmeldung erforderlich</div>
+            <input type="checkbox">
+            <span class="ccb-checkmark-hover w3-border"></span>
+          </label>
+        </div>
+
+        <div class="c-tag w3-row">
+          <label class="ccb-container" id="International">
+            <div class="ccb-label">International (wir sprechen Englisch)</div>
+            <input type="checkbox">
+            <span class="ccb-checkmark-hover w3-border"></span>
+          </label>
+        </div>
+
+        <div class="c-tag w3-row">
+          <label class="ccb-container" id="Hinweise">
+            <div class="ccb-label">Existenzielle Hinweise (in der Beschreibung)</div>
+            <input type="checkbox">
+            <span class="ccb-checkmark-hover w3-border"></span>
+          </label>
+        </div>
+
+        <div class="c-tag w3-row">
+          <div id="mindest_Alter" style="display: flex;">
+  <!--           <label class="ccb-container w3-col" id="mA_6">
+              <div class="ccb-label">Für alle</div>
+              <input type="checkbox" disabled="disabled" checked="checked">
+              <span class="ccb-checkmark-hover w3-border"></span>
+            </label> -->
+            <label class="ccb-container w3-col" id="mA_10">
+              <div class="ccb-label">> 10J.</div>
+              <input type="checkbox">
+              <span class="ccb-checkmark-hover w3-border"></span>
+            </label>
+            <label class="ccb-container w3-col" id="mA_13">
+              <div class="ccb-label">> 13J.</div>
+              <input type="checkbox">
+              <span class="ccb-checkmark-hover w3-border"></span>
+            </label>
+            <label class="ccb-container w3-col" id="mA_16">
+              <div class="ccb-label">> 16J.</div>
+              <input type="checkbox">
+              <span class="ccb-checkmark-hover w3-border"></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
     <div class="c-stable c-tier2 w3-col w3-hide" id="Zeiten">
       <div class="c-stablehead w3-hide s3">Zeiten</div>
       <div class="c-stablefield s9" >
          <!-- <input class="w3-border-0 c-input" type="time" readonly> -->
- 
-
       </div>
     </div>
+
     <div class="c-stable w3-col s3" id="Ausrichter">
       <div class="c-stablehead w3-hide s3">Ausrichter</div>
       <div class="c-stablefield s9">
@@ -128,8 +212,6 @@ html, body{
 </template>
 
 <template id="p_table_time_input_templates">
-
-
 
 <!-- <div class="c-ti-table"> -->
 <div class="c-ti-day c-active w3-row c-field">
@@ -241,10 +323,6 @@ html, body{
     </div>
   </div>
 
-  <div class="c-klitem">
-      <div class="c-keyfield">?Key?</div>
-      <i class="material-icons c-key_delete_btn c-btn">close</i>
-  </div>
 
 </template>
 
