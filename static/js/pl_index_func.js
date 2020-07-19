@@ -70,9 +70,14 @@ function pl_add_page(n = 3){
 }
 
 var tag_reference = {
-	"International": 	"public",
-	"Hinweise": 		"report",
-	"mit_Anmeldung": 	"playlist_add_check"
+	"International": 	"speaker_english_2",
+	"Hinweise": 		"warning_outline",
+	"mit_Anmeldung": 	"paper_strip_lock_vertical",
+	"mA_6": 			"person_CA_6J",
+	"mA_10": 			"person_CA_10J",
+	"mA_13": 			"person_CA_13J",
+	"mA_16": 			"person_CA_16J",
+	"mA_18": 			"person_CA_18J"
 }
 
 function pl_row_tags(rowdiv, rowdata){
@@ -81,7 +86,7 @@ function pl_row_tags(rowdiv, rowdata){
  	for (var i = 0; i < true_tags_list.length; i++) {
  		if (true_tags_list[i]){
  			new_row.querySelector("#Tags").innerHTML +=
- 				'<i class="material-icons pl_tags">'+
+ 				'<i class="my-icons pl_tags">'+
  					tag_reference[true_tags_list[i]]
  				+'</i>\n';
  		}

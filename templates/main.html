@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="static/css/w3.css">
-<link rel="stylesheet" type="text/css" href="static/css/google-icon.css">
+<!-- <link rel="stylesheet" type="text/css" href="static/css/google-icon.css"> -->
+<link rel="stylesheet" type="text/css" href="static/css/my_icons.css">
+
 <link rel="stylesheet" type="text/css" href="static/css/c-style.css">
 <link rel="stylesheet" type="text/css" href="static/css/ccb.css">
 
@@ -47,7 +49,7 @@ html, body{
 
   <div class="w3-padding-small w3-border-top w3-hide" id="btn_row_add_new">
   <div class="w3-button w3-hover-green">
-  <i class="material-icons context-icons">add</i> neuer Programmpunkt
+  <i class="my-icons context-icons">add</i> neuer Programmpunkt
   </div></div>
 
 </div>
@@ -56,23 +58,23 @@ html, body{
   <div class="c-spacer c-padding ">
     <div id="row_id" class=" w3-small c-rowid">????</div>
     <div class="w3-hide w3-padding-small c-tier2 w3-col" style="display: flow-root;">
-      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_close" 
-        >expand_less</i>
+      <i class="my-icons context-icons w3-button w3-hover-green" id="btn_close" 
+        >up_alt</i>
         <!-- onclick="pt_row_view_collapse(this.closest('.c-rrow'))" -->
-      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_edit" 
+      <i class="my-icons context-icons w3-button w3-hover-green" id="btn_edit" 
         >edit</i>
         <!-- onclick="pt_row_make_writable(this.closest('.c-rrow'))" -->
-      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_undo" 
+      <i class="my-icons context-icons w3-button w3-hover-green" id="btn_undo" 
         >undo</i>
         <!-- onclick="pt_row_undo_changes(this.closest('.c-rrow'))" -->
-      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_done" 
+      <i class="my-icons context-icons w3-button w3-hover-green" id="btn_done" 
         >done</i>
         <!-- onclick="pt_row_save_changes(this.closest('.c-rrow'))" -->
-      <i class="material-icons context-icons w3-button w3-hover-green" id="btn_delete" 
+      <i class="my-icons context-icons w3-button w3-hover-green" id="btn_delete" 
         >delete_forever</i>
         <!-- onclick="pt_row_remove(this.closest('.c-rrow'))" -->
       <i class="w3-tooltip context-icons w3-button w3-hover-green" style="overflow: visible; opacity: unset; height: 24px;">
-        <i class="material-icons" >
+        <i class="my-icons" >
         info</i>
         <div style="position:absolute;margin-left:10px;" class="w3-text w3-text-0" id="tooltip_meta"></div>
       </i>
@@ -324,6 +326,11 @@ html, body{
   </div>
 
 
+<div class="c-klitem">
+    <div class="c-keyfield">?Key?</div>
+    <i class="my-icons c-key_delete_btn c-btn">clear</i>
+</div>
+
 </template>
 
 
@@ -335,7 +342,7 @@ html, body{
 
     <button class="w3-button w3-hover-green w3-large w3-hide-large"
     onclick="w3_close_sidebar()"
-    ><i class="material-icons">arrow_back_ios</i></button>
+    ><i class="my-icons">arrow_back_ios</i></button>
 
 
   <div class="w3-container w3-hide w3-bar-block" id="u_info_div" >
@@ -348,7 +355,7 @@ html, body{
 
     <div id="logout_btn" class="w3-bar-item w3-button w3-hover-blue">
       <a>Ausloggen</a>
-    <i class="material-icons sidebar-icons">close</i>
+    <i class="my-icons sidebar-icons">clear</i>
     </div>
 
   </div>
@@ -366,7 +373,7 @@ html, body{
 
     <div id="sync_btn" class="w3-bar-item w3-button w3-hover-green w3-hide">
       <a>Synchronisieren</a>
-    <i class="material-icons sidebar-icons">sync</i>
+    <i class="my-icons sidebar-icons">sync</i>
     </div>
   </div>
 
@@ -378,7 +385,7 @@ html, body{
     <div class="c-menudiv w3-margin-top w3-leftbar w3-border-white" id="Home">
       <div class="w3-bar-item w3-button w3-hover-green">
         <a>Home</a>
-        <i class="material-icons sidebar-icons">home</i>
+        <i class="my-icons sidebar-icons">home</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
       </div>
@@ -387,7 +394,7 @@ html, body{
     <div class="c-menudiv w3-margin-top w3-leftbar w3-border-white" id="Debugdiv">
       <div class="w3-bar-item w3-button w3-hover-green">
         <a>Debug Div</a>
-        <i class="material-icons sidebar-icons">code</i>
+        <i class="my-icons sidebar-icons">code</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
       </div>
@@ -396,7 +403,7 @@ html, body{
     <div class="c-menudiv w3-margin-top w3-leftbar w3-border-white c-sl1" id="Programmeditor">
       <div class="w3-bar-item w3-button w3-hover-green">
         <a>Programmeditor</a>
-        <i class="material-icons sidebar-icons">create</i>
+        <i class="my-icons sidebar-icons">edit_list</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
         <div class="c-submenudiv w3-leftbar w3-border-white" id="Mein_Programm">
@@ -417,7 +424,7 @@ html, body{
     <div class="c-menudiv w3-margin-top w3-leftbar w3-border-white c-sl2" id="Zugangsverwaltung">
       <div class="w3-bar-item w3-button w3-hover-green">
         <a>Zugangsverwaltung</a>
-        <i class="material-icons sidebar-icons">lock_open</i>
+        <i class="my-icons sidebar-icons">people_edit</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
       </div>
@@ -426,7 +433,7 @@ html, body{
     <div class="c-menudiv w3-margin-top w3-leftbar w3-border-white c-sl2" id="Listengenerator">
       <div class="w3-bar-item w3-button w3-hover-green">
         <a>Listengenerator</a>
-        <i class="material-icons sidebar-icons">library_books</i>
+        <i class="my-icons sidebar-icons">file_multi</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
       </div>
@@ -587,7 +594,7 @@ html, body{
           <div class="w3-col s2">
             <div id="add_key_btn" class="w3-button c-btn  w3-hover-green">
               add
-              <i class="material-icons">done</i>
+              <i class="my-icons">done</i>
             </div>
           </div>
         </div>
