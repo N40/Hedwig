@@ -4,20 +4,31 @@ var data_to_server = {};
 var local_data;
 
 // Server -> Client
-function ajax_get(url, callback) {
+function ajax_get(url, callback, to = 0) {
     xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             // console.log(xhttp.responseText)
             callback(xhttp.responseText);
-        };
+        }
+        else if (xhttp.readyState == 4 && xhttp.status != 200){
+          data_comm_fail("No server connection.");
+        }
     };
     xhttp.open("GET", url, true);
+
+    if (to){
+      xhttp.timeout = to;
+      xhttp.ontimeout = ()=>{
+        data_comm_fail();
+      }
+    }
+
     xhttp.send();
 };
 
 
-function pull_data(callback = function(){return;}){
+function pull_data(callback = function(){return;}, to = 0){
     if (!u_info){return};
 
     url = "data/pull_data?key=" + u_info.key;
@@ -26,11 +37,11 @@ function pull_data(callback = function(){return;}){
         local_data = JSON.parse(response);
         update_debug_div();
         callback();
-    })
+    }, to)
 
 }
 
-function pull_user_dict(callback = function(response){return;}){
+function pull_user_dict(callback = function(response){return;}, to = 0){
   if (!u_info){return;}
 
   url = "/user/pull_user_dict?key="+u_info.key
@@ -45,23 +56,34 @@ function pull_user_dict(callback = function(response){return;}){
     init_ukc_table();
     init_ukc_form();
     callback();
-  })
+  }, to)
 }
 
 // Client -> Server
-function ajax_send(url, content, callback) {
+function ajax_send(url, content, callback, to = 0) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             callback(xhttp.responseText);
-        };
+        }
+        else if (xhttp.readyState == 4 && xhttp.status != 200){
+          data_comm_fail();
+        }
     };
     xhttp.open('POST', url);
     xhttp.setRequestHeader('content-type', 'application/json');
+
+    if (to){
+      xhttp.timeout = to;
+      xhttp.ontimeout = ()=>{
+        data_comm_fail("No server connection.");
+      }
+    }
+
     xhttp.send(content)
 }
 
-function push_data(callback = function(response){return;}){
+function push_data(callback = function(response){return;}, to = 0){
     if (!u_info){return};
     if (Object.keys(data_to_server).length == 0){
         callback();
@@ -72,10 +94,10 @@ function push_data(callback = function(response){return;}){
     ajax_send(url, JSON.stringify(data_to_server), function(response){
         data_to_server = {};
         callback();
-    });
+    }, to);
 }
 
-function push_user_dict(callback = function(response){return;}){
+function push_user_dict(callback = function(response){return;}, to = 0){
   if (!u_info){return;}
   if (Object.keys(user_dict_to_server).length == 0){
       callback();
@@ -92,9 +114,16 @@ function push_user_dict(callback = function(response){return;}){
   ajax_send(url, JSON.stringify(user_dict_to_server_temp), function(response){
       user_dict_to_server = {};
       callback();
-  });
+  }, to);
 }
 
+// failed comm
+function data_comm_fail(message = "Server Timeout"){
+  console.log("data communication failed");
+  document.getElementById("server_info_div").querySelector("#status").innerHTML =
+    "<a class='w3-text-red'>"+message+"</a>"+"<br><i class='w3-text-grey'>"+last_server_time_str+"</i>";
+  document.querySelector("#sync_btn").querySelector("i").classList.remove("w3-spin_bw");
+}
 
 
 // Syncing
@@ -118,11 +147,17 @@ function syncronize_data(callback = function(){return}){
     pull_data(function(){
   // step 3
       callback()
-    });
-  });
+    },
+    // timeout
+    3000);
+  },
+  // timeout
+  3000);
 }
 
 function syncronize_user_dict(callback = function(){return}){
+    var sub_to = 3000;
+
   // step 1
   document.querySelector("#sync_btn").querySelector("i").classList.add("w3-spin_bw");
 
@@ -133,8 +168,12 @@ function syncronize_user_dict(callback = function(){return}){
     pull_user_dict(function(){
   // step 3
       callback()
-    });
-  });
+    },
+    // timeout
+    3000); 
+  },
+  // timeout
+  3000); 
 }
 
 // PINGING
@@ -189,7 +228,7 @@ function ping_success(milliseconds, response, callback){
 function ping_fail(milliseconds, callback){
   console.log(" % fail/timeout: ", milliseconds)
   document.querySelector("#Debugdiv #sc_ping").innerHTML = ""
-  document.querySelector("#Debugdiv #sc_status").innerHTML = "no server connection";
+  document.querySelector("#Debugdiv #sc_status").innerHTML = "No server connection";
   document.querySelector("#Debugdiv #sc_status").classList = ["w3-text-red"]
 }
 

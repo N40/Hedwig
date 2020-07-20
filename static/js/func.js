@@ -111,6 +111,7 @@ function update_server_status(callback = function(){return;}){
   ajax_get("/get_server_time",function(response){
     document.getElementById("server_info_div").querySelector("#status").innerHTML
       = response;
+      last_server_time_str = response;
       callback();
   });
 }
@@ -192,6 +193,8 @@ function init_user_funcs(){
   window.addEventListener("beforeunload", function (event) {
     logout();
   });
+
+  document.querySelector("#Debugdiv #auto_ping input").checked = false;
 
   var keyinputfield  =document.getElementById('keyinputfield');
   keyinputfield.addEventListener('keypress',  function (e) {
