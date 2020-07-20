@@ -23,6 +23,17 @@ function init_tables() {
   new_table.id = "Wahlprogramm";
   document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Wahlprogramm").appendChild(new_table)
 
+  // #Ringezeit
+  new_table = document.importNode(table_tmp, true);
+  new_table.id = "Ringezeit";
+  document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Ringezeit").appendChild(new_table)
+
+  // #Besuchertag
+  new_table = document.importNode(table_tmp, true);
+  new_table.id = "Besuchertag";
+  document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Besuchertag").appendChild(new_table)
+
+
   pt_all_tables_reset();
   
 }
@@ -46,13 +57,43 @@ function pt_all_tables_reset(){
 }
 
 // ---- DATA MANIP ----- //
+function validate_Z_type(p_data, type){
+  if (!list_contains_element(["WP","BT","RZ"], type)){
+    return;
+  }
+
+  for (var field in p_data){
+    if (field.startsWith("Z_"+type)){
+      if (p_data[field]) {
+        // this should hold true for anything but ["",undefined,null]
+        return true;
+      }
+    }
+  }
+  return false;
+
+}
+
 function extract_data(level = "Eigen"){
   if (level == "GL"){
     return local_data;
   }
+  
+  var ret_data = {};
+  
+  if (list_contains_element(["WP", "BT", "RZ"], level)){
+    for (var p_id in local_data) {
+      if (validate_Z_type(local_data[p_id], level)){
+        ret_data[p_id] = local_data[p_id];
+      }
+    }
+    return ret_data;
+  }
+
+
+  // user-dependent selection
   if (!u_info){return;}
 
-  ret_data = {}
   if (level == "Eigen"){
     for (p_id in local_data) {
       if (u_info.u_id == p_id.slice(0,4)){
@@ -88,7 +129,9 @@ function extract_data(level = "Eigen"){
 // GLOBAL VARIABLES
 var PT_DATA_BIND = {
   "Mein_Programm": ()=>extract_data("Eigen"),
-  "Wahlprogramm":  ()=>extract_data("GL"),
+  "Wahlprogramm":  ()=>extract_data("WP"),
+  "Ringezeit":     ()=>extract_data("RZ"),
+  "Besuchertag":   ()=>extract_data("BT")
 }
 
 
@@ -645,6 +688,9 @@ function pt_row_content_time_eval_text(ti_day_div){
     // TODO add more sophisticated logic here or replace it with start-end input
     var ti_encoded = ti_prefix+'%' + ti_text ;
     return ti_encoded;
+  }
+  else{
+    return null;
   }
 
 }
