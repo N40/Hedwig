@@ -48,6 +48,14 @@ def extract_data(p_input, sub_rights, min_level = 0):
 
     return p_out
 
+def filter_removed(p_input):
+    p_out = {}
+    for p_id in p_input:
+        if not p_input[p_id]["meta"].startswith("Removed"):
+            p_out[p_id] = p_input[p_id];
+    return p_out
+
+
 #___________________________________
 
 def load_data(u_info):
@@ -66,7 +74,7 @@ def load_data(u_info):
     # else:
     #     p_data = siot.data_io_handler.load_data_many_by_u_id(u_id)
     p_data = siot.data_io_handler.load_data_all()
-
+    p_data = filter_removed(p_data)
 
     p_data_pull = {}
     for p_id in p_data:

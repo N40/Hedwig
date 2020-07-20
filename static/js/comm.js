@@ -136,3 +136,70 @@ function syncronize_user_dict(callback = function(){return}){
     });
   });
 }
+
+// PINGING
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+function ping(callback = ()=>{}) {
+  xhttp = new XMLHttpRequest();
+  var started = new Date().getTime();
+
+  xhttp.open("GET", "/get_server_time", /*async*/true);
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4) {
+      var ended = new Date().getTime();
+      var milliseconds = ended - started;
+
+      if (xhttp.status == 200){
+        ping_success(milliseconds, xhttp.responseText, callback)
+      }
+      else {
+        ping_fail(milliseconds, callback)
+      }
+
+    }
+  };
+  try {
+    xhttp.send(null);
+  } catch(exception) {
+    var ended = new Date().getTime();
+    var milliseconds = ended - started;
+    console.log(exception);
+    ping_fail();
+  }
+
+}
+
+function ping_success(milliseconds, response, callback){
+  // console.log(" % ping: ", milliseconds, " % r: ", response);
+  document.querySelector("#Debugdiv #sc_ping").innerHTML = milliseconds;
+  document.querySelector("#Debugdiv #sc_status").innerHTML = response;
+  document.querySelector("#Debugdiv #sc_status").classList = ["w3-text-blue"]
+
+  if      (milliseconds<50 ){ var col_class = "w3-text-blue"}
+  else if (milliseconds<200){ var col_class = "w3-text-green"}
+  else if (milliseconds<750){ var col_class = "w3-text-orange"}
+  else                      { var col_class = "w3-text-red"}
+  document.querySelector("#Debugdiv #sc_ping").classList = [col_class];
+
+}
+
+function ping_fail(milliseconds, callback){
+  console.log(" % fail/timeout: ", milliseconds)
+  document.querySelector("#Debugdiv #sc_ping").innerHTML = ""
+  document.querySelector("#Debugdiv #sc_status").innerHTML = "no server connection";
+  document.querySelector("#Debugdiv #sc_status").classList = ["w3-text-red"]
+}
+
+function auto_ping(){
+  if (!(document.querySelector("#Debugdiv #auto_ping input").checked)){
+    return;
+  }
+  ping();
+
+  sleep(3000).then(()=>{auto_ping()});
+  
+
+}

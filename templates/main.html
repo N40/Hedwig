@@ -605,6 +605,37 @@ html, body{
 
 
     <div class="c-bodydiv" id="Debugdiv">
+
+      <div class="w3-margin w3-border w3-animate-opacity w3-container"  >
+          <h3 class="w3-text-blue">Monitoring server connection</h3>
+          <div class="w3-row">
+            <div class="w3-button w3-hover-blue" onclick="ping()">
+              <a>Ping server</a>
+              <i class="my-icons" >public</i>
+            </div>
+
+            <div style="display: inline-block;">
+              <label class="ccb-container" id="auto_ping" oninput="auto_ping()">
+                <div class="ccb-label">Autoping</div>
+                <input type="checkbox">
+                <span class="ccb-checkmark ccb-blue w3-border"></span>
+              </label>
+            </div>
+
+          </div>
+
+          <div id="server_connection_info" class="w3-bar-block">
+            <div class="w3-bar-item w3-row">
+              <div class="w3-col s4">Servertime/-status:</div>
+              <div class="w3-col s6"><div id="sc_status"></div></div>
+            </div>
+            <div class="w3-bar-item w3-row">
+              <div class="w3-col s4">Ping [ms]:</div>
+              <div class="w3-col s6 w3-text-blue"><div id="sc_ping"></div></div>
+            </div>
+          </div>
+      </div>
+
       <div class="w3-margin w3-border w3-container w3-animate-opacity"  >
           <h3 class="w3-text-blue">JSON data from server</h3>
           <div id="json_data_from_server" class="w3-small" style="white-space: pre-wrap; font-family: monospace;"> </div>

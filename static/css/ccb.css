@@ -47,7 +47,7 @@ document.querySelector("#One input").checked
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  /*background-color: #eee;*/
 }
 
 .ccb-checkmark-hover, .ccb-radio-hover {

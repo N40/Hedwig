@@ -124,6 +124,10 @@ function pt_table_init(tablediv, data_object) {
   // var row_tmp = document.getElementsByTagName("template")[0].content.querySelector("#tmp_p_tablerow");
   for (var p_id in data_object) {
     // var new_row = document.importNode(row_tmp, true);
+    if (data_object[p_id].meta.split(" ")[0] == "Removed"){
+      continue;
+    }
+
     new_row = pt_row_create_new();
     new_row.id = p_id;
     new_row.querySelector("#row_id").innerHTML = p_id;
@@ -321,8 +325,22 @@ function pt_row_add_new(tablediv){
 };
 
 function pt_row_remove(rowdiv){
-  local_data[rowdiv.id].Titel = "%% removed %%";
+  // could add some disclaimer-warning etc
+  pt_row_remove_final(rowdiv);
+}
+
+function pt_row_remove_final(rowdiv){
+  var p_id = rowdiv.id;
+  local_data[p_id]["meta"] =
+    'Removed at ['+get_date_formated()+'] by user-id ['+u_info.u_id+']';
+
   rowdiv.parentElement.removeChild(rowdiv);
+
+  data_to_server[p_id] = local_data[p_id];
+  update_changes_to_server();
+  update_debug_div();
+
+  pt_all_tables_reset();
 }
 
 function pt_row_undo_changes(rowdiv){
