@@ -43,16 +43,22 @@ def extract_data(p_input, sub_rights, min_level = 0):
             p_out[field] = p_input[field]
         elif sub_rights.get(field, -1) >= min_level:
             p_out[field] = p_input[field]
-    if len(p_out.keys()):
-        p_out["meta"] = p_input.get("meta","")
+    if len(p_out.keys()) and ("meta" in p_input):
+        p_out["meta"] = p_input["meta"]
 
     return p_out
 
-def filter_removed(p_input):
+def filter_removed(p_input, keep_no_meta=True):
     p_out = {}
     for p_id in p_input:
+        if ("meta" not in p_input[p_id]):
+            if keep_no_meta:
+                p_out[p_id] = p_input[p_id]
+            continue
+
         if not p_input[p_id]["meta"].startswith("Removed"):
             p_out[p_id] = p_input[p_id];
+
     return p_out
 
 

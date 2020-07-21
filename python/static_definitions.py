@@ -11,7 +11,6 @@ SQL_COLUMNS_DATA = [
     "Tags",
     "Geld_Anfrage",
     "Geld_Limit",
-    "mit_Anmeldung", # will probably remain empty due to redundancy with tags
     #
     "Z_RZ_03_08",
     "Z_RZ_04_08",

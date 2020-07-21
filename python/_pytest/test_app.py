@@ -3,6 +3,7 @@
 # got to the level of "app.py"
 import os
 import re
+import json
 
 def setup_test_databases():
     import python._pytest.test_static_definitions as test_sd
@@ -36,6 +37,9 @@ def setup_test_ut_dt(siot):
     ut.siot = siot
     return ut, dt
 
+def hash_dict(dict):
+    hash_value = hash(json.dumps(dict, indent=4, sort_keys=True))
+
 # __ TESTING __
 # MASTER STUFF
 def test_imports():
@@ -65,27 +69,22 @@ def test_mock_databases():
     assert siot.key_graveyard._db_location   == "python/_pytest/test_key_graveyard.db"
 
 # USER TOOLS
-def test_load_user_information():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot)
 
-    assert ut.load_user_information("") is None
-    assert ut.load_user_information("Y1X2C3") =={
-        'u_id':'1.23', 'Name':'ul1_BspStamm', 'Verband':'V2', 'meta':'meta_1.23', 'Unterlager': 'Espuertes'}
-    assert ut.load_user_information("Y1X2C3:") is None
-    assert ut.load_user_information("Y1X2C3:POIUZT") is None
-    assert ut.load_user_information("Y1X2C3") == ut.load_user_information("POIUZT")
-    assert ut.load_user_information("y1x2c3") is None
-
-def test_key_functions():
+def test__key_exists():
     siot = setup_test_databases()
     ut, dt = setup_test_ut_dt(siot) 
+    import python._pytest.assert_dict_values as adv
+
+    for key in adv.V_key_exists:
+        assert ut.key_exists(key) == adv.V_key_exists[key]
+
+def test__gen_new_key():
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot)
 
     new_key = ut.gen_new_key()
     assert bool(re.match(r"^[A-Z \d\W]{6}$",new_key))
     assert ut.key_exists(new_key)
-    assert ut.key_exists("ASQW12")
-    assert ut.key_exists("asdf") == False
     assert ut.key_exists(new_key[:5]) == False
 
     import numpy as np 
@@ -93,72 +92,62 @@ def test_key_functions():
     assert ut.key_exists(alt_key) == False
 
 
-def test_u_id_functions():
+def test__id_exists():
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
+    import python._pytest.assert_dict_values as adv
+
+    for x_id in adv.V_id_exists:
+        assert ut.id_exists(x_id) == adv.V_id_exists[x_id]
+
+def test__gen_new_u_id():
     siot = setup_test_databases()
     ut, dt = setup_test_ut_dt(siot) 
 
     new_id = ut.gen_new_u_id("3")
     assert bool(re.match(r'^\w.\w\w$', new_id))
     assert new_id != ut.gen_new_u_id("3")
-
     assert ut.id_exists(new_id)
-    assert ut.id_exists("1.00")
-    assert ut.id_exists("1.23")
-    assert ut.id_exists("1.99") == False
-    assert ut.id_exists("1.2") is None
-    assert ut.id_exists("1.234") is None
 
-def test_load_user_dict():
+
+
+def test__load_user_information():
     siot = setup_test_databases()
     ut, dt = setup_test_ut_dt(siot) 
 
-    assert ut.load_user_dict({'u_id':'1.23', }) == {}
-    assert ut.load_user_dict({'u_id':'1.99', }) == {}
-    assert ut.load_user_dict({'u_id':'1.00', }) == {
-    '1.00': {'Keys': ':AQSWDE:',
-            'Name': 'ul1_Leitung',
-            'Verband': 'V1',
-            'Unterlager': 'Espuertes',
-            'meta': 'meta_1.00'},
-    '1.23': {'Keys': ':Y1X2C3:POIUZT:',
-            'Name': 'ul1_BspStamm',
-            'Verband': 'V2',
-            'Unterlager': 'Espuertes',
-            'meta': 'meta_1.23'},
-    }
+    import python._pytest.assert_dict_values as adv
 
-    assert ut.load_user_dict({'u_id':'2.00', }) == {
-    '2.00': {'Keys': ':4R5T5T:',
-            'Name': 'ul2_Leitung',
-            'Unterlager': 'Wasteland',
-            'Verband': 'V3',
-            'meta': 'meta_2.00'},
-    }
+    for key in adv.V_load_user_information:
+        print(key)
+        assert ut.load_user_information(key) ==\
+            adv.V_load_user_information[key]
 
-    ut.update_user_dict({'u_id':'1.23'}, {
-        '1.23': {'Name': 'ul1_BspStamm_modified',},
-        })
-    assert ut.load_user_dict({'u_id':'1.00', })['1.23']['Name'] ==\
-        'ul1_BspStamm'
+def test__load_user_dict():
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
-    ut.update_user_dict({'u_id':'2.00'}, {
-        '1.23': {'Name': 'ul1_BspStamm_modified',},
-        })
-    assert ut.load_user_dict({'u_id':'1.00', })['1.23']['Name'] ==\
-        'ul1_BspStamm'
+    import python._pytest.assert_dict_values as adv
 
-    ut.update_user_dict({'u_id':'1.00'}, {
-        '1.23': {'Name': 'ul1_BspStamm_modified',},
-        })
-    assert ut.load_user_dict({'u_id':'1.00', })['1.23']['Name'] ==\
-        'ul1_BspStamm_modified'
+    for case in adv.V_load_user_dict:
+        print(case)
+        assert ut.load_user_dict(adv.V_load_user_dict[case]["u_info"]) ==\
+            adv.V_load_user_dict[case]["res"]
 
-    ut.update_user_dict({'u_id':'0.__'}, {
-        '1.00': {'Name': 'ul1_Leitung_modified',},
-        })
-    assert ut.load_user_dict({'u_id':'1.00', })['1.00']['Name'] ==\
-        'ul1_Leitung_modified'
+def test__update_user_dict():
+    siot = setup_test_databases()
+    ut, dt = setup_test_ut_dt(siot) 
 
+    import python._pytest.assert_dict_values as adv
+
+    for case in adv.V_update_user_dict:
+        print(case)
+        ut.update_user_dict(
+            adv.V_update_user_dict[case]["mod"]["u_info"],
+            adv.V_update_user_dict[case]["mod"]["arg"],
+        )
+        assert ut.load_user_dict(
+            adv.V_update_user_dict[case]["check"]["u_info"] ) ==\
+            adv.V_update_user_dict[case]["check"]["res"]
 # DATA TOOLS
 # def test_get_rights():
 #     import python.data_tools as dt
@@ -175,118 +164,48 @@ def test_load_user_dict():
 #     import python.user_tools as ut
 #     setup_test_databases(dt, ut)
 
-def test_load_data():
+def test__load_data():
     siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
+    ut, dt = setup_test_ut_dt(siot)
+    import python._pytest.assert_dict_values as adv
 
-    assert dt.load_data({'a':'b'}) is None
-    assert dt.load_data({'u_id':''}) is None
-    assert dt.load_data({'u_id':'1.x'}) is None
-    assert dt.load_data({'u_id':'3.99'}) == {}
-    assert dt.load_data({'u_id':'1.23'}) == {
-    '1.00.r1': {'Ausrichter': 'ul1_Leitung',
-                'Kurztext': 'KT_r1',
-                'Langtext': 'LT_r1',
-                'Titel': 'Titel_r1',
-                'meta': 'meta_1.00.r1'},
-    '1.23.t2': {'Kurztext': 'KT_t2',
-                'Langtext': 'LT_t2',
-                'Titel': 'Titel_t2',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.t2'},
-    '1.23.z3': {'Kurztext': 'KT_z3',
-                'Langtext': 'LT_z3',
-                'Titel': 'Titel_z3',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.z3'},
-    '1.78.i5': {}
-    }
-    assert dt.load_data({'u_id':'1.00'}) == {
-    '1.23.t2': {'Kurztext': 'KT_t2',
-                'Langtext': 'LT_t2',
-                'Titel': 'Titel_t2',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.t2'},
-    '1.23.z3': {'Kurztext': 'KT_z3',
-                'Langtext': 'LT_z3',
-                'Titel': 'Titel_z3',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.z3'},
-    '1.00.r1': {'Kurztext': 'KT_r1',
-                'Langtext': 'LT_r1',
-                'Titel': 'Titel_r1',
-                'Ausrichter': 'ul1_Leitung',
-                'meta': 'meta_1.00.r1'},
-    '1.78.i5': {},
-    '2.45.u4': {'Kurztext': 'KT_u4',
-            'Langtext': 'LT_u4',
-            'Titel': 'Titel_u4',
-            'Ausrichter': '* unknown/deleted user *',
-            'meta': 'meta_2.45.u4'}
-    }
-
-    assert dt.load_data({'u_id':'1.99'}) == {
-    '1.23.t2': {'Kurztext': 'KT_t2',
-                'Langtext': 'LT_t2',
-                'Titel': 'Titel_t2',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.t2'},
-    '1.23.z3': {'Kurztext': 'KT_z3',
-                'Langtext': 'LT_z3',
-                'Titel': 'Titel_z3',
-                'Ausrichter': 'ul1_BspStamm',
-                'meta': 'meta_1.23.z3'},
-    '1.00.r1': {'Kurztext': 'KT_r1',
-                'Langtext': 'LT_r1',
-                'Titel': 'Titel_r1',
-                'Ausrichter': 'ul1_Leitung',
-                'meta': 'meta_1.00.r1'},
-    '1.78.i5': {}
-    }
-
-    assert dt.load_data({'u_id':'2.33'}) == {
-    '2.45.u4': {'Kurztext': 'KT_u4',
-                'Langtext': 'LT_u4',
-                'Titel': 'Titel_u4',
-                'Ausrichter': '* unknown/deleted user *',
-                'meta': 'meta_2.45.u4'}
-    }
-
-    assert list(dt.load_data({'u_id':'0.__'}).keys()) == \
-        ['1.00.r1', '1.23.t2', '1.23.z3', '2.45.u4', '1.78.i5']
-    assert list(dt.load_data({'u_id':'3.00'}).keys()) == \
-        ['1.00.r1', '1.23.t2', '1.23.z3', '2.45.u4', '1.78.i5']
+    for case in adv.V_load_data:
+        assert dt.load_data(
+            adv.V_load_data[case]["u_info"]) ==\
+            adv.V_load_data[case]["res"]
 
 
-def test_save_data():
+    for case in adv.V_load_data_head:
+        assert list(dt.load_data(
+            adv.V_load_data_head[case]["u_info"] )) ==\
+            adv.V_load_data_head[case]["head"]
+
+def test__save_data():
     siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
-    
-    # negative tests
-    dt.save_data({'u_id':'1.00'}, {
-    '1.23.t2':{'Titel': 'Titel_t2_modified'}
-    })
-    assert dt.load_data({'u_id':'1.23'})['1.23.t2']['Titel'] == 'Titel_t2'
+    ut, dt = setup_test_ut_dt(siot)
+    import python._pytest.assert_dict_values as adv
 
-    dt.save_data({'u_id':'2.45'}, {
-    '1.23.t2':{'Titel': 'Titel_t2_modified'}
-    })
-    assert dt.load_data({'u_id':'1.23'})['1.23.t2']['Titel'] == 'Titel_t2'
+    for case in adv.V_save_data_mod:
+        u_info_mod, mod_data, u_info_check, modified =\
+            [adv.V_save_data_mod[case][k] for k in adv.V_save_data_mod[case]]
 
+        old_state = dt.load_data(u_info_check)
+        dt.save_data(u_info_mod, mod_data)
+        new_state = dt.load_data(u_info_check)
 
-    # positive tests
-    dt.save_data({'u_id':'1.23'}, {
-    '1.23.t2':{},
-    })
-    assert dt.load_data({'u_id':'1.23'})['1.23.t2']['Titel'] == 'Titel_t2'
+        print(f"case: {case} \n:",u_info_mod, mod_data, u_info_check, modified)
+        # assert (old_state != new_state) == modified
+        if modified:
+            assert old_state != new_state
+        else:
+            assert old_state == new_state
 
+    for case in adv.V_save_data_format:
+        u_info, p_id, field, in_value, out_value =\
+            [adv.V_save_data_format[case][k] for k in adv.V_save_data_format[case]]
 
-    dt.save_data({'u_id':'1.23'}, {
-    '1.23.t2':{'Titel': 'Titel_t2_modified'},
-    '1.23.x9':{'Titel': 'Titel_x9_with_трудный_Wörterß?_crée'}
-    })
-    assert dt.load_data({'u_id':'1.23'})['1.23.t2']['Titel'] == 'Titel_t2_modified'
-    assert dt.load_data({'u_id':'1.23'})['1.23.x9']['Titel'] == 'Titel_x9_with_трудный_Wörterß?_crée'
+        dt.save_data(u_info, {p_id: {field: in_value}})
+        assert dt.load_data(u_info)[p_id][field] == out_value
 
 # SERVER ROUTES
 # - this one does not look feasible hence it's difficult to pass arguments (without hacking it to much) -
