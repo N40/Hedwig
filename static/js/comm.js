@@ -1,7 +1,14 @@
-// global variables
+// ---- GLOBAL VARIABLES ---- //
 var data_from_server = {};
 var data_to_server = {};
 var local_data;
+
+var ukc_active = false;
+var user_dict_to_server = {};
+var local_user_dict;
+
+var last_server_time_str = undefined;
+
 
 // Server -> Client
 function ajax_get(url, callback, to = 0) {
@@ -42,7 +49,10 @@ function pull_data(callback = function(){return;}, to = 0){
 }
 
 function pull_user_dict(callback = function(response){return;}, to = 0){
-  if (!u_info){return;}
+  if (!u_info || !ukc_active){
+    if (callback){callback();}
+    return;
+  }
 
   url = "/user/pull_user_dict?key="+u_info.key
   ajax_get(url, function(response){
@@ -108,6 +118,7 @@ function push_user_dict(callback = function(response){return;}, to = 0){
 
   for (u_id in user_dict_to_server) {
     user_dict_to_server_temp[u_id].Keys = key_list_to_string(user_dict_to_server_temp[u_id].Keys);
+    delete user_dict_to_server_temp[u_id].Unterlager;
   }
 
   url = "/user/push_user_dict?key="+u_info.key

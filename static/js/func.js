@@ -1,7 +1,6 @@
 // global variables
-var last_server_time_str = undefined;
 
-// DOM fuckery
+// ---- NAVIGATION ---- //
 function open_subpage(){
   var menudivs = document.getElementsByClassName("c-menudiv");
   var bodydivs = document.getElementsByClassName("c-bodydiv");
@@ -156,7 +155,7 @@ function update_debug_div(){
 function post_sync(){
   ptables = document.getElementsByClassName("c-ptable")
   for (var i = ptables.length - 1; i >= 0; i--) {
-    reset_table(ptables[i]);
+    pt_table_reset(ptables[i]);
   }
 
   update_user_info();
@@ -213,6 +212,7 @@ function init_user_funcs(){
 }
 
 function init_ukc(){
+  ukc_active = true;
   pull_user_dict();
 
   document.getElementById("ukc_creation_div").classList.remove("w3-hide");

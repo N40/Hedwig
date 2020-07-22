@@ -76,7 +76,7 @@ def get_static_definitions():
         'rights_dict':      sd.rights_dict,
     }
 
-    return f'static_definitions = {sdt}'
+    return f'static_definitions = {json.dumps(sdt, indent=4)}'
 
 #_____user_manip_____#
 

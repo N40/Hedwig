@@ -3,6 +3,9 @@
 <title>HEDWIG - FM2020 Programm-Info transfer Platform</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="favicon.ico">
+
+<!-- CSS -->
 <link rel="stylesheet" type="text/css" href="static/css/w3.css">
 <!-- <link rel="stylesheet" type="text/css" href="static/css/google-icon.css"> -->
 <link rel="stylesheet" type="text/css" href="static/css/my_icons.css">
@@ -10,14 +13,22 @@
 <link rel="stylesheet" type="text/css" href="static/css/c-style.css">
 <link rel="stylesheet" type="text/css" href="static/css/ccb.css">
 
-<link rel="shortcut icon" href="favicon.ico">
-<!-- <script type="text/javascript" src="static/js/p_data.json"></script> -->
+
+<!-- JS -->
 <script type="text/javascript" src="static/js/user.js"></script>
+<script type="text/javascript" src="static/js/user_key_controll.js"></script>
+
+
 <script type="text/javascript" src="static/js/p_table.js"></script>
+<script type="text/javascript" src="static/js/p_table_row.js"></script>
+
+<script type="text/javascript" src="static/js/utils.js"></script>
+<script type="text/javascript" src="static/js/data.js"></script>
 <script type="text/javascript" src="static/js/comm.js"></script>
 <script type="text/javascript" src="static/js/func.js"></script>
 <script type="text/javascript" src="get_static_definitions"></script>
 
+<!-- Printing Lists (index ressources) -->
 <link rel="stylesheet" type="text/css" href="static/css/pl_index_styles.css">
 <script type="text/javascript" src="static/js/pl_index_func.js"></script>
 
@@ -122,7 +133,7 @@ html, body{
       <div class="c-stablefield s9 w3-container" >
 
       <div class="w3-row" id="Ort_std"><label class="ccb-container">
-        Lagergrund
+        <div id="Lagergrund">Lagergrund?</div>
         <input type="radio" name="radio_Ort_x" checked="checked">
         <span class="ccb-radio-hover w3-border"></span>
       </label></div> 

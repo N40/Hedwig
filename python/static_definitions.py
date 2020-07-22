@@ -59,10 +59,17 @@ ti_days = {
 }
 
 unterlager_dict = {
-    0: "Admin",
-    1: "Espuertes",
-    2: "Wasteland",
-    3: "Brownsea Island"
+    0:   "Admin",
+    "T": "Tortuga",
+    1:   "Espuertes",
+    2:   "Wasteland",
+    3:   "Brownsea Island",
+    4:   "Atlantis",
+    5:   "Osterinsel",
+    6:   "Prismanien",
+    7:   "Neupfadland",
+    8:   "Erde-Feuer-Wasser-Luft",
+    9:   "St. Goldvine",
 }
 
 Felder = [ 'Kurztext', 'Langtext', 'N_TN', 'Geld_Anfrage', 'Geld_Limit', 'Zeiten',]
