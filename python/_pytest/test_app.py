@@ -77,9 +77,11 @@ def test__data_pull_data(client):
     for case in aar.V_data_pull_data_negative:
         url = case["url"]
 
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.get(url)
-            assert rv is None # this is actually redundant
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            # rv = client.get(url)
+            # assert rv is None # this is actually redundant
+        rv = client.get(url)
+        assert rv.status_code == 403;
 
 
 def test__data_push_data(client):
@@ -100,12 +102,15 @@ def test__data_push_data(client):
         url = case["url"]
         json_data = json.dumps(case["p_data"])
 
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.post(url, data=json_data, headers=headers)
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.post(url, data=json_data, headers=headers)
+        assert rv.status_code == 403;
 
 
-    with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-        rv = client.post(url, data="{}")
+    # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+    rv = client.post(url, data="{}")
+    assert rv.status_code == 403
+
 
 def test__data_push_pull_mod(client):
     mimetype = 'application/json'
@@ -144,8 +149,9 @@ def test__user_get_new_user_key(client):
         tt.assert_key(key)
 
     for url in aar.V_user_get_new_user_key_url_negative:
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.get(url)
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.get(url)
+        assert rv.status_code == 403
 
 def test__user_get_new_user_id(client):
     for url in aar.V_user_get_new_user_id_url_positive:
@@ -154,8 +160,9 @@ def test__user_get_new_user_id(client):
         tt.assert_u_id(key)
 
     for url in aar.V_user_get_new_user_id_url_negative:
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.get(url)
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.get(url)
+        assert rv.status_code == 403
 
 
 def test__user_pull_user_dict(client):
@@ -170,8 +177,10 @@ def test__user_pull_user_dict(client):
         url = case["url"]
 
         print(url)
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.get(url)
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.get(url)
+        assert rv.status_code == 403
+
 
 def test__user_push_user_dict(client):
     mimetype = 'application/json'
@@ -190,8 +199,9 @@ def test__user_push_user_dict(client):
         url = case["url_push"]
         ud_push = case["ud_push"]
 
-        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-            rv = client.get(url, data=json.dumps(ud_push), headers=headers)
+        # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.get(url, data=json.dumps(ud_push), headers=headers)
+        assert rv.status_code == 403
 
 
 def test__user_push_pull_mod(client):
@@ -211,9 +221,11 @@ def test__user_push_pull_mod(client):
         if ud_pull is None:
             print(f'{url_push}\n{url_pull}')
             print(ud_push, ud_pull)
-            with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
-                rv = client.get(url_pull)
-                print(rv.get_json())
+            # with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url_pull)
+                # print(rv.get_json())
+            assert rv.status_code == 403
+
 
         else:
             rv = client.get(url_pull)

@@ -27,7 +27,7 @@ def pull_data():
     # Server -> Client
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
-        return
+        return "invalid access-key", 403
 
     p_data = load_data(u_info)
 
@@ -38,7 +38,7 @@ def pull_data():
 def push_data():
     # Server <- Client
     if request.method != 'POST':
-        return
+        return "invalid access-key", 403
 
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
@@ -46,7 +46,7 @@ def push_data():
 
     p_data_push = request.get_json()
     if validate_data(p_data_push) == False:
-        return
+        return "invalid data payload", 403
 
     save_data(u_info, p_data_push)
 
@@ -88,7 +88,7 @@ def pull_user_dict():
     # Server -> Client
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
-        return
+        return "invalid access-key", 403
 
     user_dict = load_user_dict(u_info)
 
@@ -98,14 +98,14 @@ def pull_user_dict():
 def get_new_user_key():
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
-        return
+        return "invalid access-key", 403
     
     if u_info["u_id"][0] == '0':
         pass
     elif u_info["u_id"][2:] == '00':
         pass
     else:
-        return
+        return "permission denied, are you ULL?", 403
 
 
     new_key = gen_new_key();
@@ -115,7 +115,7 @@ def get_new_user_key():
 def get_new_user_id():
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
-        return
+        return "invalid access-key", 403
 
     target_ul_id = str(request.args.get("tulid", 'X'))
     
@@ -123,10 +123,10 @@ def get_new_user_id():
         pass
     elif u_info["u_id"][2:] == '00':
         if(target_ul_id != str(u_info["u_id"][0])):
-            return
+            return "permission denied for target UL-id ", 403
         pass
     else:
-        return
+        return "permission denied, are you ULL?", 403
 
 
     new_u_id = gen_new_u_id(target_ul_id);
@@ -138,16 +138,16 @@ def get_new_user_id():
 def push_user_dict():
     # Server <- Client
     if request.method != 'POST':
-        return
+        return "POST method required", 403
 
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
-        return
+        return "invalid access-key", 403
     
     user_dict = request.get_json()
 
     if validate_user_dict(user_dict) == False:
-        return
+        return "invalid data payload", 403
 
     update_user_dict(u_info, user_dict)
 
