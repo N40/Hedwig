@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="static/css/pl_frame_styles.css">
 <!-- <link rel="stylesheet" type="text/css" href="static/css/google-icon.css"> -->
 <link rel="stylesheet" type="text/css" href="static/css/my_icons.css">
+<link rel="preload" as="font" href="/static/fonts/icomoon.woff" type="font/woff" crossorigin>
 
 
 <style type="text/css">
@@ -31,7 +32,9 @@
 
 <div class="pl_page">
 	<div class="pl_page_metainfo">
-		Seite 1 / 1 . . .  Brownsea Island . . . Stand: 25.6 - 20:18
+		<div>#Seite:  </div><div id="pl_meta_pageNo">?/? </div><div>  . . .  </div>
+		<div>#Titel:  </div><div id="pl_meta_Titel"> ??? </div><div>  . . .  </div>
+		<div>#Stand:  </div><div id="pl_meta_time">??.??, ??:??</div><div>  . . .  </div>
 	</div>
 	<div class="pl_subpage">
 		<div class="pl_subpage_content">
@@ -61,8 +64,10 @@
 
 
 </head>
-<body>
+<body onload="console.log('$ pl frame loaded')">
+<!-- hack: forces to load font on page-rendering -->
 <i class="my-icons" style="position: fixed; visibility: hidden;" >down_alt</i>
-<!-- foces to load font on page-rendering -->
+<!-- <i class="my-icons" >down_alt</i> -->
+
 </body>
 </html>

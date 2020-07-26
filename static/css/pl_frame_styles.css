@@ -25,11 +25,17 @@
 }
 
 .pl_page_metainfo{
+    display: flex;
     padding: 0cm;
     border: 1px green dashed;
     height: 5mm;
     font-size: 10px;
     /*outline: 1cm #f2fff2 solid;*/
+}
+
+.pl_page_metainfo div{
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .pl_tags{

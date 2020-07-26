@@ -1,6 +1,8 @@
 // ---- USER fUNCTIONS ---- //
 function init_tables() {
-  table_tmp = document.getElementsByTagName("template")[0].content.querySelector("#tmp_pt_main");
+  var table_tmp = document.querySelector("template#p_table_templates").content.querySelector("#tmp_pt_main");
+  var table_date_ul_select_tmp = document.querySelector("template#p_table_templates").content.querySelector("#pt_date_ul_select");
+  var date_ul_select_tmp
 
   // #Eigen
   try{
@@ -21,16 +23,19 @@ function init_tables() {
   // #Wahlprogramm
   new_table = document.importNode(table_tmp, true);
   new_table.id = "Wahlprogramm";
+  new_table.insertBefore(document.importNode(table_date_ul_select_tmp, true), new_table.firstChild)
   document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Wahlprogramm").appendChild(new_table)
 
   // #Ringezeit
   new_table = document.importNode(table_tmp, true);
   new_table.id = "Ringezeit";
+  new_table.insertBefore(document.importNode(table_date_ul_select_tmp, true), new_table.firstChild)
   document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Ringezeit").appendChild(new_table)
 
   // #Besuchertag
   new_table = document.importNode(table_tmp, true);
   new_table.id = "Besuchertag";
+  new_table.insertBefore(document.importNode(table_date_ul_select_tmp, true), new_table.firstChild)
   document.getElementsByClassName("c-bodydiv")["Programmeditor"].querySelector("#Besuchertag").appendChild(new_table)
 
 
@@ -52,7 +57,7 @@ function pt_all_tables_reset(){
       continue;
     }
 
-    pt_table_init(ptables[i], PT_DATA_BIND[ptables[i].id]());
+    pt_table_init(ptables[i]);
   }
 }
 
@@ -60,7 +65,11 @@ function pt_all_tables_reset(){
 
 
 // ---- FUNCTIONALITY SECTION ---- //
-function pt_table_init(tablediv, data_object) {
+function pt_table_init(tablediv, data_object=null) {
+  if (!data_object){
+    var data_object = extract_data_for_table(tablediv);
+  }
+
   var table_body = tablediv.querySelector("#pt_body");
   while (table_body.firstChild) {
     table_body.removeChild(table_body.lastChild);
@@ -88,6 +97,7 @@ function pt_table_reset(tablediv){
     pt_row_undo_changes(row_divs[i])
   }
 }
+
 
 
 

@@ -176,7 +176,7 @@ function ukc_add_new_key(u_id, Name=""){
   }
 
   new_user_id_temp = u_id;
-  url = "user/get_new_user_key?key="+u_info.key+"&tulid="+ul_id[0];
+  url = "user/get_new_user_key?key="+u_info.key // +"&tulid="+ul_id[0]; deprecated
   ajax_get(url, function(key){
     local_user_dict[new_user_id_temp].Keys.push(key);
 

@@ -16,7 +16,7 @@
   height: 0;
   position: relative;
   left: -8px;
-  top: -8px;
+  top: -10px;
   color: blue;
 }
 
@@ -97,6 +97,12 @@ textarea{
 .c-select{
   padding-top: 4px;
   padding-bottom: 4px;
+  border-bottom: 2px solid #2196F3;
+  background: white;
+}
+.c-select:hover{
+  background: #2196F3;
+  color: white;
 }
 
 
@@ -170,4 +176,33 @@ textarea{
 }
 .c-ti-slots-options div{
   padding: 0px 8px 0px 8px;
+}
+
+.c-ptable .c-rrow {
+  border-top:1px solid #ccc !important;
+  margin-bottom: 4px !important;
+}
+
+.c-ptable .c-rrow[expanded="true"] .cw3-border {
+  border-width: 1px;
+  border-top: 0!important;
+  border-right: 0!important;
+  border-style: solid !important;
+}
+.c-ptable .c-rrow[expanded="false"] .cw3-border {
+  border: 0!important;
+}
+
+.c-ptable .c-rrow[writable="true"] .c-active .cw3-border,
+.c-ptable .c-rrow[writable="true"] .cw3-border.c-active {
+  border-color: #4CAF50;
+}
+
+.c-ptable .c-rrow[writable="false"] .cw3-border{
+  border-color: #ccc;
+}
+
+
+.c-ptable .c-rrow[expanded="false"] textarea {
+  max-height: none !important;
 }

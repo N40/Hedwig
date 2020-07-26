@@ -452,8 +452,8 @@ function pt_row_make_writable(rowdiv) {
   // time
   var time_input_subdivs = rowdiv.querySelectorAll(".c-ti-day.c-active")
   for (var i = time_input_subdivs.length - 1; i >= 0; i--) {
-    time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background = "white"
-    time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background = "white";
+    // time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background = "white"
+    // time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background = "white";
     var checkboxes = time_input_subdivs[i].getElementsByTagName("input")
     for (var j = checkboxes.length - 1; j >= 0; j--) {
       checkboxes[j].disabled = ""
@@ -480,6 +480,7 @@ function pt_row_make_writable(rowdiv) {
 
   // cross-function feature
   rowdiv.writable = true;
+  rowdiv.setAttribute("writable","true");
   pt_row_btn_update(rowdiv);
 }
 
@@ -492,8 +493,8 @@ function pt_row_make_static(rowdiv) {
   // ccb
   var time_input_subdivs = rowdiv.getElementsByClassName("c-ti-day")
   for (var i = time_input_subdivs.length - 1; i >= 0; i--) {
-    time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background ="none";
-    time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background ="none";;
+    // time_input_subdivs[i].querySelector(".c-ti-day .c-ti-head .ccb-checkmark-hover").style.background ="none";
+    // time_input_subdivs[i].querySelector(".c-ti-body .w3-border").style.background ="none";;
     checkboxes = time_input_subdivs[i].getElementsByTagName("input")
     for (var j = checkboxes.length - 1; j >= 0; j--) {
       if (checkboxes[j].type == "checkbox"){
@@ -528,6 +529,8 @@ function pt_row_make_static(rowdiv) {
 
 
   rowdiv.writable = false;
+  rowdiv.setAttribute("writable","false")
+
   pt_row_btn_update(rowdiv);
 }
 
@@ -632,10 +635,13 @@ function pt_row_view_expand(rowdiv){
                     true)
   }
 
-  rowdiv.classList.replace("w3-hover-blue","w3-light-grey");
+  // rowdiv.classList.replace("w3-hover-blue","w3-light-grey");
+  rowdiv.classList.replace("w3-border-white", "w3-border-blue");
+
   rowdiv.style.height = rowdiv.children[0].scrollHeight + 'px';
   // console.log(row.style.height)
   rowdiv.expanded = true;
+  rowdiv.setAttribute("expanded","true")
   pt_row_btn_update(rowdiv);
 }
 
@@ -660,11 +666,15 @@ function pt_row_view_collapse(rowdiv){
   for (var i = inputs.length - 1; i >= 0; i--) {
     inputs[i].classList.replace("w3-border", "w3-border-0")
   }
-  rowdiv.classList.replace("w3-light-grey", "w3-hover-blue");
+  // rowdiv.classList.replace("w3-light-grey", "w3-hover-blue");
+  rowdiv.classList.replace("w3-border-blue", "w3-border-white");
+
 
   rowdiv.style.height = rowdiv.children[0].scrollHeight + 'px';
 
   rowdiv.expanded = false;
+  rowdiv.setAttribute("expanded","false")
+
 }
 
 function pt_row_view_toggle(rowdiv){

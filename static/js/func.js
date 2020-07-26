@@ -220,3 +220,20 @@ function init_ukc(){
   document.getElementById("ukc_preamble_div").classList.add("w3-hide");
 }
 
+function init_templates(){
+  var ul_select_tmp = document.querySelector("template").content.querySelector("#ul_select");
+  for (ul_id in static_definitions.unterlager_dict){
+    var option = document.createElement("option");
+    option.value = ul_id;
+    option.innerHTML = "["+ul_id+"] "+static_definitions.unterlager_dict[ul_id];
+    ul_select_tmp.appendChild(option);
+  }
+
+  var pl_ul_select = document.querySelector("#Listengenerator #pl_type_date_ul_select #ul_select")
+  for (ul_id in static_definitions.unterlager_dict){
+    var option = document.createElement("option");
+    option.value = ul_id;
+    option.innerHTML = "["+ul_id+"] "+static_definitions.unterlager_dict[ul_id];
+    pl_ul_select.appendChild(option);
+  }
+}
