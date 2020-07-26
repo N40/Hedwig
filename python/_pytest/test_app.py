@@ -1,212 +1,224 @@
-#!/usr/bin/python3
+import pytest
 
-# got to the level of "app.py"
-import os
+
+import python._pytest.assert_app_responses as aar
+from python._pytest.test_backend import setup_test_databases, setup_test_ut_dt
+import python.type_tools as tt
+
 import re
-import json
 
-def setup_test_databases():
-    import python._pytest.test_static_definitions as test_sd
-
-    os.system("""
-    cp python/_pytest/db_raws/test_p_data_0.db          python/_pytest/test_p_data.db
-    cp python/_pytest/db_raws/test_user_data_0.db       python/_pytest/test_user_data.db
-    cp python/_pytest/db_raws/test_key_graveyard_0.db   python/_pytest/test_key_graveyard.db
-    """)
-
-    # dt.sd.data_db_location = test_sd.data_db_location
-    # dt.init_data_tools()
-
-    # ut.sd.user_db_location = test_sd.user_db_location
-    # ut.sd.key_graveyard_db_location = test_sd.key_graveyard_db_location
-    # ut.init_user_tools()
-    import python.sqlite_io_tools as siot
-    siot.sd.data_db_location = test_sd.data_db_location
-    siot.sd.user_db_location = test_sd.user_db_location
-    siot.sd.key_graveyard_db_location = test_sd.key_graveyard_db_location
-
-    siot.init_data_io()
-    siot.init_user_io()
-
-    return siot
-
-def setup_test_ut_dt(siot):
-    import python.data_tools as dt
-    import python.user_tools as ut
-    dt.siot = siot
-    ut.siot = siot
-    return ut, dt
-
-def hash_dict(dict):
-    hash_value = hash(json.dumps(dict, indent=4, sort_keys=True))
-
-# __ TESTING __
-# MASTER STUFF
-def test_imports():
-
-    from flask import Flask, jsonify, render_template, request, redirect, url_for, after_this_request, send_from_directory
-
-    import time
-    import json
-    import sqlite3
-    import re
-
-    import python.data_tools as dt
-    import python.user_tools as ut
-    import python.static_definitions as sd
-    import python.type_tools
-
-    # Asserting python 3.6 or higher
-    import sys
-    assert (sys.version.split(".")[0] == "3" and int(sys.version.split(".")[1])>=6)
-
-def test_mock_databases():
+# GENERAL SETUP
+from app import *
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
     siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot)
 
-    assert siot.data_io_handler._db_location == "python/_pytest/test_p_data.db"
-    assert siot.user_io_handler._db_location == "python/_pytest/test_user_data.db"
-    assert siot.key_graveyard._db_location   == "python/_pytest/test_key_graveyard.db"
-
-# USER TOOLS
-
-def test__key_exists():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
-    import python._pytest.assert_dict_values as adv
-
-    for key in adv.V_key_exists:
-        assert ut.key_exists(key) == adv.V_key_exists[key]
-
-def test__gen_new_key():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot)
-
-    new_key = ut.gen_new_key()
-    assert bool(re.match(r"^[A-Z \d\W]{6}$",new_key))
-    assert ut.key_exists(new_key)
-    assert ut.key_exists(new_key[:5]) == False
-
-    import numpy as np 
-    alt_key = new_key[:5]+np.base_repr((np.int(new_key[5],base=36)+1)%36,base=36)
-    assert ut.key_exists(alt_key) == False
+    with app.test_client() as client:
+        client._siot = siot
+        yield client
 
 
-def test__id_exists():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
-    import python._pytest.assert_dict_values as adv
+# TESTING
 
-    for x_id in adv.V_id_exists:
-        assert ut.id_exists(x_id) == adv.V_id_exists[x_id]
+def test_master(client):
+    for str_check in aar.V_master_musthave:
+        rv = client.get("/")
+        str_rv = rv.data.decode("utf8")
 
-def test__gen_new_u_id():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
+        assert str_check in str_rv;
 
-    new_id = ut.gen_new_u_id("3")
-    assert bool(re.match(r'^\w.\w\w$', new_id))
-    assert new_id != ut.gen_new_u_id("3")
-    assert ut.id_exists(new_id)
+    for str_protected in aar.V_master_donthave:
+        str_protected = str_protected.lower()
+        rv = client.get("/")
+        str_rv = rv.data.decode("utf8").lower()
+        match = str_protected in str_rv
+        print(str_protected)
+        assert match == False;
 
+def test_backdoor(client):
+    # fail the databases
+    client._siot.user_io_handler
+    client._siot.data_io_handler
 
+    for case in aar.V_backdoor:
+        url, json_check = case.values()
 
-def test__load_user_information():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
+        rv = client.get(url)
+        assert json.loads(rv.data) == json_check
 
-    import python._pytest.assert_dict_values as adv
+def test__get_server_time(client):
+    rv = client.get('/get_server_time')
+    assert rv.data.decode('utf8') == time.strftime("%d.%m.%Y, %H:%M");
 
-    for key in adv.V_load_user_information:
-        print(key)
-        assert ut.load_user_information(key) ==\
-            adv.V_load_user_information[key]
+def test__login(client):
+    for case in aar.V_login:
+        url, json_check = case.values()
 
-def test__load_user_dict():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
+        rv = client.get(url)
+        assert json.loads(rv.data) == json_check
 
-    import python._pytest.assert_dict_values as adv
+def test__logout(client):
+    for case in aar.V_logout:
+        url, bin_check = case.values()
 
-    for case in adv.V_load_user_dict:
-        print(case)
-        assert ut.load_user_dict(adv.V_load_user_dict[case]["u_info"]) ==\
-            adv.V_load_user_dict[case]["res"]
-
-def test__update_user_dict():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot) 
-
-    import python._pytest.assert_dict_values as adv
-
-    for case in adv.V_update_user_dict:
-        print(case)
-        ut.update_user_dict(
-            adv.V_update_user_dict[case]["mod"]["u_info"],
-            adv.V_update_user_dict[case]["mod"]["arg"],
-        )
-        assert ut.load_user_dict(
-            adv.V_update_user_dict[case]["check"]["u_info"] ) ==\
-            adv.V_update_user_dict[case]["check"]["res"]
-# DATA TOOLS
-# def test_get_rights():
-#     import python.data_tools as dt
-#     import python.user_tools as ut
-#     setup_test_databases(dt, ut)
-
-# def test_get_sub_rights():
-#     import python.data_tools as dt
-#     import python.user_tools as ut
-#     setup_test_databases(dt, ut)
-
-# def test_extract_data():
-#     import python.data_tools as dt
-#     import python.user_tools as ut
-#     setup_test_databases(dt, ut)
-
-def test__load_data():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot)
-    import python._pytest.assert_dict_values as adv
-
-    for case in adv.V_load_data:
-        assert dt.load_data(
-            adv.V_load_data[case]["u_info"]) ==\
-            adv.V_load_data[case]["res"]
+        rv = client.get(url)
+        assert rv.data == bin_check
 
 
-    for case in adv.V_load_data_head:
-        assert list(dt.load_data(
-            adv.V_load_data_head[case]["u_info"] )) ==\
-            adv.V_load_data_head[case]["head"]
+def test__data_pull_data(client):
+    for case in aar.V_data_pull_data_positive:
+        url = case["url"]
+        json_check = case["j_res"]
 
-def test__save_data():
-    siot = setup_test_databases()
-    ut, dt = setup_test_ut_dt(siot)
-    import python._pytest.assert_dict_values as adv
+        rv = client.get(url)
+        assert json.loads(rv.data) == json_check
 
-    for case in adv.V_save_data_mod:
-        u_info_mod, mod_data, u_info_check, modified =\
-            [adv.V_save_data_mod[case][k] for k in adv.V_save_data_mod[case]]
+    for case in aar.V_data_pull_data_negative:
+        url = case["url"]
 
-        old_state = dt.load_data(u_info_check)
-        dt.save_data(u_info_mod, mod_data)
-        new_state = dt.load_data(u_info_check)
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url)
+            assert rv is None # this is actually redundant
 
-        print(f"case: {case} \n:",u_info_mod, mod_data, u_info_check, modified)
-        # assert (old_state != new_state) == modified
-        if modified:
-            assert old_state != new_state
+
+def test__data_push_data(client):
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Accept': mimetype
+    }
+
+    for case in aar.V_data_push_data_positive:
+        url = case["url"]
+        json_data = json.dumps(case["p_data"])
+
+        rv = client.post(url, data=json_data, headers=headers)
+        assert rv.status == "200 OK"
+
+    for case in aar.V_data_push_data_negative:
+        url = case["url"]
+        json_data = json.dumps(case["p_data"])
+
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.post(url, data=json_data, headers=headers)
+
+
+    with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+        rv = client.post(url, data="{}")
+
+def test__data_push_pull_mod(client):
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Accept': mimetype
+    }
+
+    for case in aar.V_data_push_pull_modification:
+        url_push    = case['url_push']
+        url_pull    = case['url_pull']
+        p_data_push = case['p_data_push']
+        p_data_pull = case['p_data_pull']
+
+        client.post(url_push, data=json.dumps(p_data_push), headers=headers)
+        rv = client.get(url_pull)
+        res_data = json.loads(rv.data)
+
+        assert res_data == p_data_pull
+
+def test__get_static_definitions(client):
+    rv = client.get("/get_static_definitions")
+
+    # this will init static_definitions
+    # "static_definitions = {...}"
+    match = re.search(r"static_definitions.*=([\s\S]+)$", rv.data.decode("utf8"))
+    assert match is not None
+    static_definitions = json.loads(match.group(1))
+    for key in aar.V_static_definition_keys:
+        assert key in static_definitions
+
+def test__user_get_new_user_key(client):
+    for url in aar.V_user_get_new_user_key_url_positive:
+        rv = client.get(url)
+        key = rv.data.decode("utf8")
+        tt.assert_key(key)
+
+    for url in aar.V_user_get_new_user_key_url_negative:
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url)
+
+def test__user_get_new_user_id(client):
+    for url in aar.V_user_get_new_user_id_url_positive:
+        rv = client.get(url)
+        key = rv.data.decode("utf8")
+        tt.assert_u_id(key)
+
+    for url in aar.V_user_get_new_user_id_url_negative:
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url)
+
+
+def test__user_pull_user_dict(client):
+    for case in aar.V_user_pull_user_dict_positive:
+        url = case["url"]
+        json_check = case["j_res"]
+
+        rv = client.get(url)
+        assert json.loads(rv.data) == json_check
+
+    for case in aar.V_user_pull_user_dict_negative:
+        url = case["url"]
+
+        print(url)
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url)
+
+def test__user_push_user_dict(client):
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Accept': mimetype
+    }
+
+    for case in aar.V_user_push_user_dict_positive:
+        url = case["url_push"]
+        ud_push = case["ud_push"]
+
+        rv = client.post(url, data=json.dumps(ud_push), headers=headers)
+
+    for case in aar.V_user_push_user_dict_negative:
+        url = case["url_push"]
+        ud_push = case["ud_push"]
+
+        with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+            rv = client.get(url, data=json.dumps(ud_push), headers=headers)
+
+
+def test__user_push_pull_mod(client):
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Accept': mimetype
+    }
+
+    for case in aar.V_user_push_pull_mod:
+        url_push, url_pull, ud_push, ud_pull = case.values()
+
+        print(f'{url_push}\n{url_pull}')
+
+        client.post(url_push, data=json.dumps(ud_push), headers=headers)
+
+        if ud_pull is None:
+            print(f'{url_push}\n{url_pull}')
+            print(ud_push, ud_pull)
+            with pytest.raises(TypeError, match=r"either returned None or ended without a return"):
+                rv = client.get(url_pull)
+                print(rv.get_json())
+
         else:
-            assert old_state == new_state
+            rv = client.get(url_pull)
+            j_res = rv.get_json()
 
-    for case in adv.V_save_data_format:
-        u_info, p_id, field, in_value, out_value =\
-            [adv.V_save_data_format[case][k] for k in adv.V_save_data_format[case]]
+            assert j_res == ud_pull
 
-        dt.save_data(u_info, {p_id: {field: in_value}})
-        assert dt.load_data(u_info)[p_id][field] == out_value
-
-# SERVER ROUTES
-# - this one does not look feasible hence it's difficult to pass arguments (without hacking it to much) -
 

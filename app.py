@@ -45,6 +45,9 @@ def push_data():
         return
 
     p_data_push = request.get_json()
+    if validate_data(p_data_push) == False:
+        return
+
     save_data(u_info, p_data_push)
 
     return "success"
@@ -96,14 +99,10 @@ def get_new_user_key():
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
         return
-
-    target_ul_id = request.args.get("tulid", 'X')
     
     if u_info["u_id"][0] == '0':
         pass
     elif u_info["u_id"][2:] == '00':
-        if(target_ul_id != u_info["u_id"][0]):
-            return
         pass
     else:
         return
@@ -144,8 +143,12 @@ def push_user_dict():
     u_info = load_user_information(request.args.get("key"))
     if (u_info is None):
         return
-
+    
     user_dict = request.get_json()
+
+    if validate_user_dict(user_dict) == False:
+        return
+
     update_user_dict(u_info, user_dict)
 
     return "success"

@@ -5,6 +5,7 @@ from numpy import base_repr
 from numpy.random import random as rand
 
 import python.static_definitions as sd
+import python.type_tools as tt
 
 # from python.io_tools import json_io_handler
 # user_io_handler = json_io_handler("data/users/user_dict.json")
@@ -153,3 +154,16 @@ def update_user_dict(u_info, user_dict_push):
 
     # user_io_handler.save(user_dict_updates)
     siot.user_io_handler.update_data(user_dict_updates)
+
+
+def validate_user_dict(user_dict):
+    if type(user_dict) != dict:
+        return False
+
+    for u_id in user_dict:
+        try:
+            tt.assert_u_id(u_id)
+        except TypeError:
+            return False
+
+    return True

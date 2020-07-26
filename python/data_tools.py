@@ -45,6 +45,9 @@ def extract_data(p_input, sub_rights, min_level = 0):
             p_out[field] = p_input[field]
     if len(p_out.keys()) and ("meta" in p_input):
         p_out["meta"] = p_input["meta"]
+    elif p_input.get("meta","").startswith("Removed"):
+        # this is necessary in order to accept removement statements without any further data
+        p_out["meta"] = p_input["meta"]
 
     return p_out
 
@@ -61,6 +64,17 @@ def filter_removed(p_input, keep_no_meta=True):
 
     return p_out
 
+def validate_data(p_data):
+    if type(p_data) != dict:
+        return False
+
+    for p_id in p_data:
+        try:
+            tt.assert_p_id(p_id)
+        except TypeError:
+            return False
+
+    return True
 
 #___________________________________
 
