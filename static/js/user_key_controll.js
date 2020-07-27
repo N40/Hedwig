@@ -143,7 +143,8 @@ function ukc_form_submit_new_key_gen(){
       local_user_dict[new_u_id] = {
         "Name"    : document.querySelector("#ukc_creation_form").querySelector('#Name_manual').value,
         "Verband" : document.querySelector("#ukc_creation_form").querySelector('#Verband').value,
-        "Keys"    : []
+        "Keys"    : [],
+        "meta"    : 'Created at ['+get_date_formated()+'] by user-id ['+u_info.u_id+']',
       }
       ukc_add_new_key(new_u_id);
 
@@ -179,6 +180,8 @@ function ukc_add_new_key(u_id, Name=""){
   url = "user/get_new_user_key?key="+u_info.key // +"&tulid="+ul_id[0]; deprecated
   ajax_get(url, function(key){
     local_user_dict[new_user_id_temp].Keys.push(key);
+    local_user_dict[new_user_id_temp].meta =
+      'Modified at ['+get_date_formated()+'] by user-id ['+u_info.u_id+']'
 
     user_dict_to_server[new_user_id_temp] = local_user_dict[new_user_id_temp];
     new_user_id_temp = null;

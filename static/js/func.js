@@ -143,6 +143,16 @@ function update_user_info(){
   uidiv.querySelector("#u_vb").innerHTML = u_info["Verband"]||"<i class='w3-small'>Verband?</i>"
 }
 
+function update_user_config(){
+  ucdiv = document.querySelector(".c-bodydiv#Benutzerconfig  #user_config_details")
+  ucdiv.querySelector("#u_name").innerHTML = u_info["Name"];
+  ucdiv.querySelector("#u_ul").innerHTML = u_info["Unterlager"];
+  ucdiv.querySelector("#u_vb").innerHTML = u_info["Verband"]||"<i class='w3-small'>undefined</i>"
+  ucdiv.querySelector("#meta").innerHTML = u_info.meta;
+  var level = (u_info.u_id[0] == "0")?"2 (Admin)":(u_info.u_id.slice(2,4)=="00"?"1 (UL-Leitung)":"0 (Stamm/Ausrichter)");
+  ucdiv.querySelector("#u_level").innerHTML = "Level "+ level;
+}
+
 function update_debug_div(){
   // console.log(data_from_server)
   var ddiv = document.getElementsByClassName("c-bodydiv")["Debugdiv"];

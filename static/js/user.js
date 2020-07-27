@@ -34,6 +34,8 @@ function post_login(){
     init_tables();
     update_user_info();
     update_server_status();
+
+    update_user_config();
   })
 }
 
