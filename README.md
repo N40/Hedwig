@@ -10,6 +10,6 @@ http://nanobyte.pythonanywhere.com/
 
 Beispielzugang
 
-UL-Leitung: *3_141592653* ; 
-Benutzer: *QWERTZ*
+UL-Leitung: *WS3J1X* ; 
+Benutzer: *A9SP6X*
 
