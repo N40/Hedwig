@@ -143,6 +143,25 @@ function extract_data_by_ul(ul, data_in=null){
   return ret_data  
 }
 
+function extract_data_by_type_date_ul(type, date, ul, data_in=null){
+  if (!data_in){
+    var data = local_data;
+  } else {
+    var data = data_in;
+  }
+
+  if (ul != "all"){
+      data = extract_data_by_ul(ul, data);
+  }   
+  if (date != "all"){
+      data = extract_data_by_date(date, data);
+  }
+  if (type != "all"){
+      data = extract_data_by_type(type, data);
+  }
+  return data;
+}
+
 function extract_data_for_table(tablediv){
   var table_name = tablediv.id;
   var ret_data = PT_DATA_BIND[table_name]();

@@ -476,6 +476,12 @@ html, body{
         <i class="my-icons sidebar-icons">file_multi</i>
       </div>
       <div class="c-colldiv w3-margin-left w3-bar-block">
+        <div class="c-submenudiv w3-leftbar w3-border-white" id="Manuelle_Auswahl">
+          <a class="w3-bar-item w3-button w3-hover-blue" >Manuelle Auswahl</a>
+        </div>
+        <div class="c-submenudiv w3-leftbar w3-border-white" id="InfoTafel_Auswahl">
+          <a class="w3-bar-item w3-button w3-hover-blue" >Info-Tafel Auswahl</a>
+        </div>
       </div>
     </div>
   </div>
@@ -555,17 +561,18 @@ html, body{
   </div>
 
   <div class="c-bodydiv w3-animate-opacity c-sl2" id="Listengenerator" >
-    <div class="w3-container w3-margin w3-border">
-      <h3 class="w3-text-blue">Listengenerator</h3>
+   
+    <div class="c-subbodydiv w3-animate-opacity w3-container w3-margin w3-border" id="Manuelle_Auswahl">
+      <h3 class="w3-text-blue">Listengenerator - Manuelle zusammenstellung von Programm-Tabellen</h3>
 
       <div class="w3-row w3-padding-small" style="max-width: 800px" id="pl_type_date_ul_select">
         <div style="display: inline-flex" class="w3-col s4">
           <!-- <div>Unterlager:</div>  -->
           <select class="w3-select c-select w3-margin-right" id="type_select">
             <option value="all" selected="selected">Alle Typen</option>
-            <option value="WP"  selected="selected">Wahlprogramm</option>
-            <option value="BT"  selected="selected">Besuchtertag</option>
-            <option value="RZ"  selected="selected">Ringezeit</option>
+            <option value="WP" >Wahlprogramm</option>
+            <option value="BT" >Besuchtertag</option>
+            <option value="RZ" >Ringezeit</option>
           </select>
         </div>
         <div style="display: inline-flex" class="w3-col s3">
@@ -591,10 +598,32 @@ html, body{
       </div>
 
       <a onclick="pl_print_frame()" class="w3-hover-blue w3-button">Drucken</a>
-      <a onclick="pl_render_page()"    class="w3-hover-blue w3-button">Füllen</a>
+      <a onclick="pl_render_page_manual_select()"    class="w3-hover-blue w3-button">Füllen</a>
       <a onclick="pl_init_frame()"  class="w3-hover-blue w3-button">iframe init</a>
 
     </div>
+
+    <div class="c-subbodydiv w3-animate-opacity w3-container w3-margin w3-border" id="InfoTafel_Auswahl">
+      <h3 class="w3-text-blue">Listengenerator - fertige Zusammenstellung für Info-Tafel </h3>
+
+      <div class="w3-row w3-padding-small" style="max-width: 800px" id="pl_infotafel_select">
+        <div style="display: inline-flex" class="w3-col s9">
+          <!-- <div>Unterlager:</div>  -->
+          <select class="w3-select c-select w3-margin-right" id="infotafe_select">
+            <option value="Ttg_0" >Tortuga (West-Tor)</option>
+            <option value="ul1_0" >UL-Espuertes (Hauptplatz)</option>
+            <option value="2"  >Irgendwo</option>
+            <option value="3"  >Irgendwann</option>
+          </select>
+        </div>
+      </div>
+
+      <a onclick="pl_print_frame()" class="w3-hover-blue w3-button">Drucken</a>
+      <a onclick="pl_render_page_infotafel_preset()"    class="w3-hover-blue w3-button">Füllen</a>
+      <a onclick="pl_init_frame()"  class="w3-hover-blue w3-button">iframe init</a>
+
+    </div>
+
     <div id="iframe_container" class="w3-margin"></div>
 
   </div>

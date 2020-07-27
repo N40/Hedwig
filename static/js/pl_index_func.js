@@ -6,6 +6,29 @@ var PL_FRAME_HTML = "<iframe class=\"pl_frame\" src=\"/pl_frame\" onload=\"pl_in
             "gen placeholder\n" +
             "</iframe> "
 
+var TYPE_FORM = {
+    "RZ":  "Ringezeit",
+    "WP":  "Wahlprogramm",
+    "BT":  "Besuchertag",
+    "all": "Alles Programm"
+}
+
+function pl_title_generate(type, date, ul){
+    var titel = "";
+
+    titel += TYPE_FORM[type];
+
+    titel += (ul=="all")?
+        " auf dem ganzen Lager":
+        " im Unterlager "+static_definitions.unterlager_dict[ul];
+
+    titel += (date=="all")?
+        " an allen Tagen":
+        " am "+date;
+
+    return titel;
+}
+
 // CLIENT FUNCTIONS
 function pl_print_frame()
 {
@@ -33,9 +56,40 @@ function pl_init_frame_dom(){
 function pl_render_page(){
     pl_document.body.innerHTML = '';
 
-    var ul   = document.querySelector("#Listengenerator #ul_select").value;
-    var date = document.querySelector("#Listengenerator #date_select").value;
-    var type = document.querySelector("#Listengenerator #type_select").value;
+    var subbodydiv = this.closest(".c-subbodydiv");
+
+    if (subbodydiv.id == "Manuelle_Auswahl"){
+        pl_render_page_manual_select();
+    }
+
+
+}
+
+function pl_render_page_infotafel_preset(){
+    pl_document.body.innerHTML = '';
+
+    var infotafel   = document.querySelector(".c-bodydiv#Listengenerator #InfoTafel_Auswahl #infotafe_select").value;
+
+    var collection = static_definitions.infotafel_presets[infotafel];
+    console.log(collection);
+    for (var i = 0; i < collection.length; i++) {
+        var [type, date, ul] = collection[i];
+        var data = extract_data_by_type_date_ul(type, date, ul);
+        var titel = pl_title_generate(type, date, ul);
+
+        pl_render_chapter_to_page(data, titel);
+    }
+
+
+}
+
+
+function pl_render_page_manual_select(){
+    pl_document.body.innerHTML = '';
+
+    var ul   = document.querySelector(".c-bodydiv#Listengenerator #Manuelle_Auswahl #ul_select").value;
+    var date = document.querySelector(".c-bodydiv#Listengenerator #Manuelle_Auswahl #date_select").value;
+    var type = document.querySelector(".c-bodydiv#Listengenerator #Manuelle_Auswahl #type_select").value;
 
     var data = local_data;
     if (ul != "all"){
@@ -48,9 +102,10 @@ function pl_render_page(){
         data = extract_data_by_type(type, data);
     }
 
-    pl_render_chapter_to_page(data, "Übersicht: Alles an Wahlprogramm")
+    var titel = pl_title_generate(type, date, ul);
 
 
+    pl_render_chapter_to_page(data, titel);
 }
 
 function pl_render_chapter_to_page(data, titel="/"){

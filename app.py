@@ -77,6 +77,7 @@ def get_static_definitions():
         'ti_days':          sd.ti_days,
         'unterlager_dict':  sd.unterlager_dict,
         'rights_dict':      sd.rights_dict,
+        'infotafel_presets': sd.infotafel_presets
     }
 
     return f'static_definitions = {json.dumps(sdt, indent=4)}'

@@ -183,3 +183,22 @@ rights_dict = {
 
     }
 }
+
+# Info-Tafel Presets
+#   InfoTafel
+#        Type, Date,  UL
+
+infotafel_presets = {
+    "ul1_0": [
+        ["WP", "03.08", "1"],
+        ["WP", "04.08", "1"],
+        ["RZ", "all",   "1"],
+        ["BT", "08.08",  "1"],
+        ["WP", "11.08",  "all"],
+    ],
+    "Ttg_0": [
+        ["all", "03.08", "T"],
+        ["all", "04.08", "T"],
+        ["BT", "08.08",  "T"],
+    ]
+}
