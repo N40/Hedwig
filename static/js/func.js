@@ -34,13 +34,16 @@ function c_colldiv_toggle(coll_div, target=-1, sudden_expand = false){
   }
 
   if (sudden_expand){
-    coll_div.style.maxHeight = "unset";
+    // coll_div.style.maxHeight = "unset";
+    coll_div.setAttribute("expanded", "sudden_trans")
   }
 
   if (target){
-    coll_div.style.maxHeight = null;
+    // coll_div.style.maxHeight = null;
+    coll_div.setAttribute("expanded", false)
   } else {
-    coll_div.style.maxHeight = coll_div.scrollHeight + "px";
+    // coll_div.style.maxHeight = coll_div.scrollHeight + "px";
+    coll_div.setAttribute("expanded", true)
   }
 };
 

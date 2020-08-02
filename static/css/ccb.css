@@ -96,19 +96,20 @@ document.querySelector("#One input").checked
 
 .ccb-container input:checked ~ .ccb-checkmark-hover:after,
 .ccb-container input:checked ~ .ccb-radio-hover:after {
-  display: block;
-  opacity: 1	
+  display: block !important;
+  opacity: 1 !important;	
 }
 .ccb-container:hover input:checked ~ .ccb-checkmark-hover:after,
 .ccb-container:hover input:checked ~ .ccb-radio-hover:after {
   display: block;
   opacity: 1;	
 }
+/* disabled here, see c-style.css
 .ccb-container:hover input   ~ .ccb-checkmark-hover:after,
 .ccb-container:hover input   ~ .ccb-radio-hover:after {
   display: block;
   opacity: .5;	
-}
+}*/
 
 
 /* Create the ccb-checkmark/indicator (hidden when not checked) */
@@ -122,7 +123,7 @@ document.querySelector("#One input").checked
 .ccb-container input:checked ~ .ccb-checkmark:after,
 .ccb-container input:checked ~ .ccb-checkmark-hover:after,
 .ccb-container input:checked ~ .ccb-radio-hover:after {
-  display: block;
+  display: block !important;
 }
 
 /* Style the ccb-checkmark/indicator */

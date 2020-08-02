@@ -2,8 +2,15 @@
 .c-colldiv {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  transition: max-height 0.2s ease-in-out;
 }
+.c-colldiv[expanded="true"] {
+  max-height: 400px !important;
+}
+.c-colldiv[expanded="sudden_trans"] {
+  max-height: unset !important;
+}
+
 .c-rrow{
   overflow: hidden;
   transition: height 0.2s ease-out;
@@ -193,16 +200,21 @@ textarea{
   border: 0!important;
 }
 
-.c-ptable .c-rrow[writable="true"] .c-active .cw3-border,
-.c-ptable .c-rrow[writable="true"] .cw3-border.c-active {
-  border-color: #4CAF50;
-}
-
-.c-ptable .c-rrow[writable="false"] .cw3-border{
+.c-ptable .c-rrow .c-field .cw3-border{
   border-color: #ccc;
+}
+.c-ptable .c-rrow[writable="true"] .c-field[access="true"] .cw3-border {
+  border-color: #4CAF50 !important;
+}
+/* we allow grey-on-hover when checkbox is active */
+.c-rrow[writable="true"] .c-field[access="true"] .ccb-container:hover input   ~ .ccb-checkmark-hover:after,
+.c-rrow[writable="true"] .c-field[access="true"] .ccb-container:hover input   ~ .ccb-radio-hover:after {
+  display: block;
+  opacity: .5;  
 }
 
 
 .c-ptable .c-rrow[expanded="false"] textarea {
   max-height: none !important;
 }
+
